@@ -55,6 +55,7 @@ public class ControllerImpl implements Controller {
     
     @Override
     public boolean exit() {
+	view.showExit();
 	return true;
     }
 
