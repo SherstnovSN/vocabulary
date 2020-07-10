@@ -2,7 +2,7 @@ package vocabulary;
 
 import java.util.HashMap;
 
-public class EngRusVocabulary implements Vocabulary{
+public class VocabularyImpl implements Vocabulary{
     
     private HashMap<String, String> vocabulary = new HashMap<String, String>();
     
