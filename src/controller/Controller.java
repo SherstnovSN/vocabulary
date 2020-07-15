@@ -1,17 +1,16 @@
 package controller;
 
+import java.util.Map;
+import java.util.Set;
+
 public interface Controller {
-    
-    void start();
     
     void addNewPosition();
     
-    void getVocabulary();
+    Set<Map.Entry<String, String>> getVocabulary();
     
-    void getTranslation();
+    String getTranslation();
     
     void deletePosition();
-    
-    boolean exit();
     
 }

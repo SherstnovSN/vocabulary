@@ -15,28 +15,29 @@ public class Application {
 	
 	Vocabulary vocabulary = new VocabularyImpl();
 	View view = new ViewImpl();
-	Controller controller = new ControllerImpl(view, vocabulary);
+	Controller controller = new ControllerImpl(vocabulary);
 	Scanner commandScanner = new Scanner(System.in);
 	
 	boolean exit = false;
 	while(!exit) {
-	    	controller.start();
+	    	view.showCommands();
 		int command = commandScanner.nextInt();
 		switch(command) {
 			case 1:
 			    controller.addNewPosition();
 			    break;
 			case 2:
-			    controller.getVocabulary();
+			    view.showVocabulary(controller.getVocabulary());
 			    break;
 			case 3:
-			    controller.getTranslation();
+			    view.showTranslation(controller.getTranslation());
 			    break;
 			case 4:
 			    controller.deletePosition();
 			    break;
 			case 0:
-			    exit = controller.exit();
+			    exit = true;
+			    view.showExit();
 		}
 	}
     }
