@@ -5,12 +5,12 @@ import java.util.Set;
 
 public interface Controller {
     
-    void addNewPosition();
+    void addNewPosition(String source, String translation);
     
     Set<Map.Entry<String, String>> getVocabulary();
     
-    String getTranslation();
+    String getTranslation(String source);
     
-    void deletePosition();
+    void deletePosition(String source);
     
 }

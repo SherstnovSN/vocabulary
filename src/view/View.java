@@ -1,15 +1,16 @@
 package view;
 
-import java.util.Map;
-import java.util.Set;
-
 public interface View {
     
     void showCommands();
     
-    void showVocabulary(Set<Map.Entry<String, String>> vocabularyEntry);
+    void addNewPositionToVocabulary();
     
-    void showTranslation(String translation);
+    void showVocabulary();
+    
+    void showTranslation();
+    
+    void deletePositionFromVocabulary();
     
     void showExit();
     

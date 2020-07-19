@@ -13,32 +13,33 @@ public class Application {
 
     public static void main(String[] args) {
 	
-	Vocabulary vocabulary = new VocabularyImpl();
-	View view = new ViewImpl();
-	Controller controller = new ControllerImpl(vocabulary);
+	Scanner scanner = new Scanner(System.in);
 	Scanner commandScanner = new Scanner(System.in);
+	Vocabulary vocabulary = new VocabularyImpl();
+	Controller controller = new ControllerImpl(vocabulary);
+	View view = new ViewImpl(scanner, controller);
 	
 	boolean exit = false;
 	while(!exit) {
 	    	view.showCommands();
-		int command = commandScanner.nextInt();
-		switch(command) {
+		switch(commandScanner.nextInt()) {
 			case 1:
-			    controller.addNewPosition();
+			    view.addNewPositionToVocabulary();
 			    break;
 			case 2:
-			    view.showVocabulary(controller.getVocabulary());
+			    view.showVocabulary();
 			    break;
 			case 3:
-			    view.showTranslation(controller.getTranslation());
+			    view.showTranslation();
 			    break;
 			case 4:
-			    controller.deletePosition();
+			    view.deletePositionFromVocabulary();
 			    break;
 			case 0:
 			    exit = true;
 			    view.showExit();
 		}
 	}
+	commandScanner.close();
     }
 }

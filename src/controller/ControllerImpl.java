@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 import vocabulary.Vocabulary;
@@ -9,18 +8,13 @@ import vocabulary.Vocabulary;
 public class ControllerImpl implements Controller {
     
     private Vocabulary vocabulary;
-    private Scanner scanner = new Scanner(System.in);
     
     public ControllerImpl(Vocabulary vocabulary) {
 	this.vocabulary = vocabulary;
     }
     
     @Override
-    public void addNewPosition() {
-	String pair = scanner.nextLine();
-	String[] pairArray = pair.trim().split(" ");
-	String source = pairArray[0];
-	String translation = pairArray[1];
+    public void addNewPosition(String source, String translation) {
 	vocabulary.add(source, translation);
     }
     
@@ -30,14 +24,12 @@ public class ControllerImpl implements Controller {
     }
     
     @Override
-    public String getTranslation() {
-	String source = scanner.nextLine();
+    public String getTranslation(String source) {
 	return vocabulary.get(source);
     }
     
     @Override
-    public void deletePosition() {
-	String source = scanner.nextLine();
+    public void deletePosition(String source) {
 	vocabulary.delete(source);
     }
 }
