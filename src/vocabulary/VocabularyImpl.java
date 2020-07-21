@@ -2,14 +2,24 @@ package vocabulary;
 
 import java.util.HashMap;
 
+import validator.Validator;
+
 public class VocabularyImpl implements Vocabulary{
     
+    private Validator validator;
     private HashMap<String, String> vocabulary = new HashMap<String, String>();
+    
+    public VocabularyImpl(Validator validator) {
+	this.validator = validator;
+    }
     
     @Override
     public boolean add(String source, String translation) {
-	vocabulary.put(source, translation);
-	return true;
+	if(validator.validate(source, translation)) {
+	    vocabulary.put(source, translation);
+	    return true;
+	}
+	return false;
     }
     
     @Override

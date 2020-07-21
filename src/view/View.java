@@ -2,7 +2,7 @@ package view;
 
 public interface View {
     
-    void showCommands();
+    void showCommands(String example);
     
     void addNewPositionToVocabulary();
     

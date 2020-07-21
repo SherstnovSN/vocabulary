@@ -17,8 +17,8 @@ public class ViewImpl implements View {
     }
     
     @Override
-    public void showCommands() {
-	System.out.println("1 - добавить слово (пример - book книга), "
+    public void showCommands(String  example) {
+	System.out.println("1 - добавить слово (пример - " + example + "), "
 		+ "2 - отобразить словарь, "
 		+ "3 - найти слово, "
 		+ "4 - удалить слово, "

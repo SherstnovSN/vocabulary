@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 import controller.Controller;
 import controller.ControllerImpl;
+import validator.EngRusValidator;
+import validator.Validator;
 import view.View;
 import view.ViewImpl;
 import vocabulary.Vocabulary;
@@ -15,13 +17,14 @@ public class Application {
 	
 	Scanner scanner = new Scanner(System.in);
 	Scanner commandScanner = new Scanner(System.in);
-	Vocabulary vocabulary = new VocabularyImpl();
+	Validator validator = new EngRusValidator();
+	Vocabulary vocabulary = new VocabularyImpl(validator);
 	Controller controller = new ControllerImpl(vocabulary);
 	View view = new ViewImpl(scanner, controller);
 	
 	boolean exit = false;
 	while(!exit) {
-	    	view.showCommands();
+	    	view.showCommands(validator.getExample());
 		switch(commandScanner.nextInt()) {
 			case 1:
 			    view.addNewPositionToVocabulary();
