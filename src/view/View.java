@@ -1,8 +1,8 @@
 package view;
 
 public interface View {
-    
-    void showCommands(String example);
+
+    String selectCommand();
     
     void addNewPositionToVocabulary();
     
