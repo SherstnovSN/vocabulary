@@ -17,9 +17,26 @@ public class Application {
 
         Scanner scanner = new Scanner(System.in);
         View view = new ViewImpl();
+        Vocabulary vocabulary;
+
         Validator engValidator = new ValidatorImpl("^[a-z]{4}$", "^[а-я]+$");
         Vocabulary engVocabulary = new VocabularyImpl(engValidator);
-        Controller controller = new ControllerImpl(engVocabulary);
+
+        Validator numValidator = new ValidatorImpl("^[0-9]{5}$", "^[а-я]+$");
+        Vocabulary numVocabulary = new VocabularyImpl(numValidator);
+
+        view.showVocabularies();
+
+        switch (scanner.nextLine()) {
+            case "1":
+                vocabulary = engVocabulary; break;
+            case "2":
+                vocabulary = numVocabulary; break;
+            default:
+                vocabulary = engVocabulary;
+        }
+
+        Controller controller = new ControllerImpl(vocabulary);
 
         boolean exit = false;
         while (!exit) {

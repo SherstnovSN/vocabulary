@@ -6,6 +6,13 @@ import java.util.Set;
 public class ViewImpl implements View {
 
     @Override
+    public void showVocabularies() {
+        System.out.print("Выбор словаря: ");
+        System.out.println("1 - EngRus, "
+                + "2 - NumRus");
+    }
+
+    @Override
     public void showCommands() {
         System.out.println("1 - добавить слово, "
                 + "2 - отобразить словарь, "
