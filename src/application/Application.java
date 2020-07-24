@@ -16,26 +16,29 @@ public class Application {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
+        View view = new ViewImpl();
         Validator engValidator = new ValidatorImpl("^[a-z]{4}$", "^[а-я]+$");
         Vocabulary engVocabulary = new VocabularyImpl(engValidator);
         Controller controller = new ControllerImpl(engVocabulary);
-        View view = new ViewImpl(scanner, controller);
 
         boolean exit = false;
         while (!exit) {
-            String command = view.selectCommand();
-            switch (command) {
+            view.showCommands();
+            switch (scanner.nextLine()) {
                 case "1":
-                    view.addNewPositionToVocabulary();
+                    String newPosition = scanner.nextLine();
+                    String[] newPositionArray = newPosition.trim().split(" ");
+                    controller.addNewPosition(newPositionArray[0], newPositionArray[1]);
                     break;
                 case "2":
-                    view.showVocabulary();
+                    view.showVocabulary(controller.getVocabulary());
                     break;
                 case "3":
-                    view.showTranslation();
+                    String source = scanner.nextLine();
+                    view.showTranslation(controller.getTranslation(source));
                     break;
                 case "4":
-                    view.deletePositionFromVocabulary();
+                    controller.deletePosition(scanner.nextLine());
                     break;
                 case "0":
                     exit = true;
