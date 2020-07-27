@@ -20,7 +20,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public Set<Map.Entry<String, String>> getVocabulary() {
-        return vocabulary.getAll().entrySet();
+        return vocabulary.getAll();
     }
 
     @Override

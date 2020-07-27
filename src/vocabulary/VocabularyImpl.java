@@ -1,40 +1,43 @@
 package vocabulary;
 
+import data_access.DataAccess;
 import validator.Validator;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class VocabularyImpl implements Vocabulary {
 
     private Validator validator;
-    private HashMap<String, String> vocabulary = new HashMap<>();
+    private DataAccess dataAccess;
 
-    public VocabularyImpl(Validator validator) {
+    public VocabularyImpl(Validator validator, DataAccess dataAccess) {
         this.validator = validator;
+        this.dataAccess = dataAccess;
     }
 
     @Override
     public boolean add(String source, String translation) {
         if (validator.validate(source, translation)) {
-            vocabulary.put(source, translation);
+            dataAccess.add(source, translation);
             return true;
         }
         return false;
     }
 
     @Override
-    public HashMap<String, String> getAll() {
-        return vocabulary;
+    public Set<Map.Entry<String, String>> getAll() {
+        return dataAccess.getAll().entrySet();
     }
 
     @Override
     public String get(String source) {
-        return vocabulary.get(source);
+        return dataAccess.get(source);
     }
 
     @Override
     public boolean delete(String source) {
-        vocabulary.remove(source);
+        dataAccess.delete(source);
         return true;
     }
 

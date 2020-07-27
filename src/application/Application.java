@@ -2,6 +2,8 @@ package application;
 
 import controller.Controller;
 import controller.ControllerImpl;
+import data_access.DataAccess;
+import data_access.DataAccessFile;
 import validator.Validator;
 import validator.ValidatorImpl;
 import view.View;
@@ -9,6 +11,7 @@ import view.ViewImpl;
 import vocabulary.Vocabulary;
 import vocabulary.VocabularyImpl;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class Application {
@@ -19,11 +22,15 @@ public class Application {
         View view = new ViewImpl();
         Vocabulary vocabulary;
 
+        File engFile = new File("C://vocabularies/eng_vocabulary.txt");
+        DataAccess engDataAccess = new DataAccessFile(engFile);
         Validator engValidator = new ValidatorImpl("^[a-z]{4}$", "^[а-я]+$");
-        Vocabulary engVocabulary = new VocabularyImpl(engValidator);
+        Vocabulary engVocabulary = new VocabularyImpl(engValidator, engDataAccess);
 
+        File numFile = new File("C://vocabularies/num_vocabulary.txt");
+        DataAccess numDataAccess = new DataAccessFile(numFile);
         Validator numValidator = new ValidatorImpl("^[0-9]{5}$", "^[а-я]+$");
-        Vocabulary numVocabulary = new VocabularyImpl(numValidator);
+        Vocabulary numVocabulary = new VocabularyImpl(numValidator, numDataAccess);
 
         view.showVocabularies();
 

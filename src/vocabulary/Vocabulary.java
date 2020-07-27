@@ -1,12 +1,13 @@
 package vocabulary;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public interface Vocabulary {
     
     boolean add(String source, String translation);
     
-    HashMap<String, String> getAll();
+    Set<Map.Entry<String, String>> getAll();
     
     String get(String source);
     
