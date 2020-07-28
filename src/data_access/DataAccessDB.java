@@ -2,10 +2,7 @@ package data_access;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -42,17 +39,14 @@ public class DataAccessDB implements DataAccess {
     @Override
     public void add(String source, String translation) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            try (Connection connection = DriverManager.getConnection(url, username, password)) {
-                Statement statement = connection.createStatement();
-                if (get(source).equals("Not found")) statement.executeUpdate(String.format(addCommand, tableName, source, translation));
-                else statement.executeUpdate(String.format(addIfExistsCommand, tableName, translation, source));
-            }
-        } catch (Exception ex) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            Statement statement = connection.createStatement();
+            if (get(source).equals("Not found"))
+                statement.executeUpdate(String.format(addCommand, tableName, source, translation));
+            else statement.executeUpdate(String.format(addIfExistsCommand, tableName, translation, source));
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-
     }
 
     @Override
@@ -60,16 +54,12 @@ public class DataAccessDB implements DataAccess {
 
         HashMap<String, String> vocabulary = new HashMap<>();
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            try (Connection connection = DriverManager.getConnection(url, username, password)) {
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(String.format(getAllCommand, tableName));
-                while(resultSet.next()) {
-                    vocabulary.put(resultSet.getString("source"), resultSet.getString("translation"));
-                }
-            }
-        } catch (Exception ex) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(String.format(getAllCommand, tableName));
+            while (resultSet.next())
+                vocabulary.put(resultSet.getString("source"), resultSet.getString("translation"));
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -81,14 +71,11 @@ public class DataAccessDB implements DataAccess {
 
         String translation = "Not found";
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            try (Connection connection = DriverManager.getConnection(url, username, password)) {
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(String.format(getCommand, tableName, source));
-                if(resultSet.next()) translation = resultSet.getString("translation");
-            }
-        } catch (Exception ex) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(String.format(getCommand, tableName, source));
+            if (resultSet.next()) translation = resultSet.getString("translation");
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -98,13 +85,10 @@ public class DataAccessDB implements DataAccess {
     @Override
     public void delete(String source) {
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            try (Connection connection = DriverManager.getConnection(url, username, password)) {
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(String.format(deleteCommand, tableName, source));
-            }
-        } catch (Exception ex) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(String.format(deleteCommand, tableName, source));
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }

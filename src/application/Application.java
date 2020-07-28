@@ -19,6 +19,12 @@ public class Application {
 
     public static void main(String[] args) {
 
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         Scanner scanner = new Scanner(System.in);
         View view = new ViewImpl();
         Vocabulary vocabulary;
