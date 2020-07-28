@@ -17,7 +17,7 @@ public class DataAccessDB implements DataAccess {
     private String addCommand = "INSERT %s (source, translation) VALUES ('%s', '%s')";
     private String addIfExistsCommand = "UPDATE %s SET translation = '%s' WHERE source = '%s'";
     private String getAllCommand = "SELECT * FROM %s";
-    private String getCommand = "SELECT translation FROM %s WHERE source = '%s'";
+    private String getCommand = "SELECT source, translation FROM %s WHERE source = '%s'";
     private String deleteCommand = "DELETE FROM %s WHERE source = '%s'";
 
     public DataAccessDB(String tableName) {
@@ -38,59 +38,42 @@ public class DataAccessDB implements DataAccess {
 
     @Override
     public void add(String source, String translation) {
-
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            Statement statement = connection.createStatement();
-            if (get(source).equals("Not found"))
-                statement.executeUpdate(String.format(addCommand, tableName, source, translation));
-            else statement.executeUpdate(String.format(addIfExistsCommand, tableName, translation, source));
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
+        if (get(source).equals("Not found")) execute(String.format(addCommand, tableName, source, translation));
+        else execute(String.format(addIfExistsCommand, tableName, translation, source));
     }
 
     @Override
     public HashMap<String, String> getAll() {
-
-        HashMap<String, String> vocabulary = new HashMap<>();
-
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(String.format(getAllCommand, tableName));
-            while (resultSet.next())
-                vocabulary.put(resultSet.getString("source"), resultSet.getString("translation"));
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return vocabulary;
+        return execute(String.format(getAllCommand, tableName));
     }
 
     @Override
     public String get(String source) {
-
-        String translation = "Not found";
-
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(String.format(getCommand, tableName, source));
-            if (resultSet.next()) translation = resultSet.getString("translation");
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return translation;
+        HashMap<String, String> vocabulary = execute(String.format(getCommand, tableName, source));
+        if (!(vocabulary.size() == 0)) return vocabulary.get(source);
+        return "Not found";
     }
 
     @Override
     public void delete(String source) {
+        execute(String.format(deleteCommand, tableName, source));
+    }
 
+    private HashMap<String, String> execute(String query) {
+        ResultSet resultSet;
+        HashMap<String, String> vocabulary = new HashMap<>();
         try (Connection connection = DriverManager.getConnection(url, username, password)) {
             Statement statement = connection.createStatement();
-            statement.executeUpdate(String.format(deleteCommand, tableName, source));
+            boolean checkQueryResult = statement.execute(query);
+            if (checkQueryResult) {
+                resultSet = statement.getResultSet();
+                while (resultSet.next())
+                    vocabulary.put(resultSet.getString("source"), resultSet.getString("translation"));
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        return vocabulary;
     }
 
 }
