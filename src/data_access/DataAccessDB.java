@@ -12,9 +12,16 @@ import java.util.Properties;
 public class DataAccessDB implements DataAccess {
 
     private String tableName;
+
     private String url;
     private String username;
     private String password;
+
+    private String addCommand = "INSERT %s (source, translation) VALUES ('%s', '%s')";
+    private String addIfExistsCommand = "UPDATE %s SET translation = '%s' WHERE source = '%s'";
+    private String getAllCommand = "SELECT * FROM %s";
+    private String getCommand = "SELECT translation FROM %s WHERE source = '%s'";
+    private String deleteCommand = "DELETE FROM %s WHERE source = '%s'";
 
     public DataAccessDB(String tableName) {
         this.tableName = tableName;
@@ -35,15 +42,12 @@ public class DataAccessDB implements DataAccess {
     @Override
     public void add(String source, String translation) {
 
-        String sqlCommand = "INSERT " + tableName + " (source, translation) VALUES ('" + source + "', '" + translation + "')";
-        String translationExistsSqlCommand = "UPDATE " + tableName + " SET translation = '" + translation + "' WHERE source = '" + source + "'";
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection connection = DriverManager.getConnection(url, username, password)) {
                 Statement statement = connection.createStatement();
-                if (get(source).equals("Not found")) statement.executeUpdate(sqlCommand);
-                else statement.executeUpdate(translationExistsSqlCommand);
+                if (get(source).equals("Not found")) statement.executeUpdate(String.format(addCommand, tableName, source, translation));
+                else statement.executeUpdate(String.format(addIfExistsCommand, tableName, translation, source));
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -56,13 +60,11 @@ public class DataAccessDB implements DataAccess {
 
         HashMap<String, String> vocabulary = new HashMap<>();
 
-        String sqlCommand = "SELECT * FROM " + tableName;
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection connection = DriverManager.getConnection(url, username, password)) {
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sqlCommand);
+                ResultSet resultSet = statement.executeQuery(String.format(getAllCommand, tableName));
                 while(resultSet.next()) {
                     vocabulary.put(resultSet.getString("source"), resultSet.getString("translation"));
                 }
@@ -78,13 +80,12 @@ public class DataAccessDB implements DataAccess {
     public String get(String source) {
 
         String translation = "Not found";
-        String sqlCommand = "SELECT translation FROM " + tableName + " WHERE source = '" + source + "'";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection connection = DriverManager.getConnection(url, username, password)) {
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sqlCommand);
+                ResultSet resultSet = statement.executeQuery(String.format(getCommand, tableName, source));
                 if(resultSet.next()) translation = resultSet.getString("translation");
             }
         } catch (Exception ex) {
@@ -97,13 +98,11 @@ public class DataAccessDB implements DataAccess {
     @Override
     public void delete(String source) {
 
-        String sqlCommand = "DELETE FROM " + tableName + " WHERE source = '" + source + "'";
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection connection = DriverManager.getConnection(url, username, password)) {
                 Statement statement = connection.createStatement();
-                statement.executeUpdate(sqlCommand);
+                statement.executeUpdate(String.format(deleteCommand, tableName, source));
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
