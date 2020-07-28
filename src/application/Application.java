@@ -3,6 +3,7 @@ package application;
 import controller.Controller;
 import controller.ControllerImpl;
 import data_access.DataAccess;
+import data_access.DataAccessDB;
 import data_access.DataAccessFile;
 import validator.Validator;
 import validator.ValidatorImpl;
@@ -22,8 +23,8 @@ public class Application {
         View view = new ViewImpl();
         Vocabulary vocabulary;
 
-        File engFile = new File("C://vocabularies/eng_vocabulary.txt");
-        DataAccess engDataAccess = new DataAccessFile(engFile);
+        String engTableName = "eng_rus";
+        DataAccess engDataAccess = new DataAccessDB(engTableName);
         Validator engValidator = new ValidatorImpl("^[a-z]{4}$", "^[а-я]+$");
         Vocabulary engVocabulary = new VocabularyImpl(engValidator, engDataAccess);
 

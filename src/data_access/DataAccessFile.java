@@ -18,6 +18,7 @@ public class DataAccessFile implements DataAccess {
 
     @Override
     public void add(String source, String translation) {
+        if (!get(source).equals("Not found")) delete(source);
         try(FileOutputStream fos = new FileOutputStream(file, true);
             PrintStream writer = new PrintStream(fos)) {
             writer.println(source + " " + translation);
@@ -34,7 +35,7 @@ public class DataAccessFile implements DataAccess {
         try(FileInputStream fis = new FileInputStream(file);
             Scanner scanner = new Scanner(fis)) {
             while(scanner.hasNextLine()) {
-                String str[] = scanner.nextLine().trim().split(" ");
+                String[] str = scanner.nextLine().trim().split(" ");
                 vocabulary.put(str[0], str[1]);
             }
         } catch(IOException ex) {
@@ -46,16 +47,18 @@ public class DataAccessFile implements DataAccess {
     @Override
     public String get(String source) {
 
+        String translation = "Not found";
+
         try(FileInputStream fis = new FileInputStream(file);
             Scanner scanner = new Scanner(fis)) {
             while(scanner.hasNextLine()) {
-                String str[] = scanner.nextLine().trim().split(" ");
-                if(str[0].equals(source)) return str[1];
+                String[] str = scanner.nextLine().trim().split(" ");
+                if(str[0].equals(source)) translation = str[1];
             }
         } catch(IOException ex) {
             System.out.println(ex.getMessage());
         }
-        return "Слово отсутствует";
+        return translation;
     }
 
     @Override
