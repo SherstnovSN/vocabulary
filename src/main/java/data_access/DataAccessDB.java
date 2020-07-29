@@ -25,7 +25,7 @@ public class DataAccessDB implements DataAccess {
 
         Properties properties = new Properties();
 
-        try (FileInputStream fis = new FileInputStream("src/resources/database.properties")) {
+        try (FileInputStream fis = new FileInputStream("src/main/java/resources/database.properties")) {
             properties.load(fis);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
