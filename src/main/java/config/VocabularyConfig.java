@@ -4,7 +4,6 @@ import controller.Controller;
 import controller.ControllerImpl;
 import data_access.DataAccess;
 import data_access.DataAccessDB;
-import data_access.DataAccessFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,7 +18,6 @@ import vocabulary.Vocabulary;
 import vocabulary.VocabularyImpl;
 
 import javax.sql.DataSource;
-import java.io.File;
 
 @Configuration
 @ComponentScan(basePackages = "view")
@@ -46,8 +44,7 @@ public class VocabularyConfig {
 
     @Bean
     public DataAccess numDataAccess() {
-        File numFile = new File("C://vocabularies/num_vocabulary.txt");
-        return new DataAccessFile(numFile);
+        return new DataAccessDB("num_rus");
     }
 
     @Bean

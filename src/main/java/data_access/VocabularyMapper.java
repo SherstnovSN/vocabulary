@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class VocabularyMapper implements RowMapper{
+public class VocabularyMapper implements RowMapper<Position>{
 
     @Override
     public Position mapRow(ResultSet rs, int rowNum) throws SQLException {

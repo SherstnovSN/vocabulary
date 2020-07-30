@@ -2,8 +2,8 @@ package validator;
 
 public class ValidatorImpl implements Validator {
 
-    private String sourceRegex;
-    private String translationRegex;
+    private final String sourceRegex;
+    private final String translationRegex;
 
     public ValidatorImpl(String sourceRegex, String translationRegex) {
         this.sourceRegex = sourceRegex;

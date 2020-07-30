@@ -13,13 +13,13 @@ public class DataAccessDB implements DataAccess {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private String tableName;
+    private final String tableName;
 
-    private String addCommand = "INSERT %s (source, translation) VALUES ('%s', '%s')";
-    private String addIfExistsCommand = "UPDATE %s SET translation = '%s' WHERE source = '%s'";
-    private String getAllCommand = "SELECT * FROM %s";
-    private String getCommand = "SELECT * FROM %s WHERE source = '%s'";
-    private String deleteCommand = "DELETE FROM %s WHERE source = '%s'";
+    private final String addCommand = "INSERT %s (source, translation) VALUES ('%s', '%s')";
+    private final String addIfExistsCommand = "UPDATE %s SET translation = '%s' WHERE source = '%s'";
+    private final String getAllCommand = "SELECT * FROM %s";
+    private final String getCommand = "SELECT * FROM %s WHERE source = '%s'";
+    private final String deleteCommand = "DELETE FROM %s WHERE source = '%s'";
 
     public DataAccessDB(String tableName) {
         this.tableName = tableName;
@@ -45,9 +45,9 @@ public class DataAccessDB implements DataAccess {
     public String get(String source) {
         Position position;
         try {
-            position = (Position) jdbcTemplate.queryForObject(String.format(getCommand, tableName, source), new VocabularyMapper());
+            position = jdbcTemplate.queryForObject(String.format(getCommand, tableName, source), new VocabularyMapper());
         } catch (EmptyResultDataAccessException ex) { return "Not found"; }
-        return position.getTranslation();
+        return position != null ? position.getTranslation() : "Not found";
     }
 
     @Override
