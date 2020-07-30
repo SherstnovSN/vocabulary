@@ -20,13 +20,14 @@ import vocabulary.VocabularyImpl;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = "view")
+@PropertySource("classpath:database.properties")
 public class VocabularyConfig {
+
+    @Autowired
+    private Environment environment;
 
     @Bean
     public Validator engValidator() {
@@ -81,20 +82,11 @@ public class VocabularyConfig {
 
     @Bean
     public DataSource dataSource() {
-
-        Properties properties = new Properties();
-
-        try (FileInputStream fis = new FileInputStream("src/main/resources/database.properties")) {
-            properties.load(fis);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(properties.getProperty("driverClassName"));
-        dataSource.setUrl(properties.getProperty("url"));
-        dataSource.setUsername(properties.getProperty("username"));
-        dataSource.setPassword(properties.getProperty("password"));
+        dataSource.setDriverClassName(environment.getProperty("jdbc.driverClassName"));
+        dataSource.setUrl(environment.getProperty("jdbc.url"));
+        dataSource.setUsername(environment.getProperty("jdbc.username"));
+        dataSource.setPassword(environment.getProperty("jdbc.password"));
         return dataSource;
     }
 
