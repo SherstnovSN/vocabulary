@@ -11,11 +11,6 @@ public class VocabularyImpl implements Vocabulary {
     private Validator validator;
     private DataAccess dataAccess;
 
-    public VocabularyImpl(Validator validator, DataAccess dataAccess) {
-        this.validator = validator;
-        this.dataAccess = dataAccess;
-    }
-
     @Override
     public boolean add(String source, String translation) {
         if (validator.validate(source, translation)) {
@@ -39,6 +34,14 @@ public class VocabularyImpl implements Vocabulary {
     public boolean delete(String source) {
         dataAccess.delete(source);
         return true;
+    }
+
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
+
+    public void setDataAccess(DataAccess dataAccess) {
+        this.dataAccess = dataAccess;
     }
 
 }

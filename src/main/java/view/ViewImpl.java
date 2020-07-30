@@ -1,8 +1,11 @@
 package view;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.Set;
 
+@Component("view")
 public class ViewImpl implements View {
 
     @Override

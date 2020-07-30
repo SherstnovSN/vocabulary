@@ -1,5 +1,6 @@
 package controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import vocabulary.Vocabulary;
 
 import java.util.Map;
@@ -8,10 +9,6 @@ import java.util.Set;
 public class ControllerImpl implements Controller {
 
     private Vocabulary vocabulary;
-
-    public ControllerImpl(Vocabulary vocabulary) {
-        this.vocabulary = vocabulary;
-    }
 
     @Override
     public void addNewPosition(String source, String translation) {
@@ -31,5 +28,9 @@ public class ControllerImpl implements Controller {
     @Override
     public void deletePosition(String source) {
         vocabulary.delete(source);
+    }
+
+    public void setVocabulary(Vocabulary vocabulary) {
+        this.vocabulary = vocabulary;
     }
 }

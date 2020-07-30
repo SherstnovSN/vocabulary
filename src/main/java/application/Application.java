@@ -1,10 +1,13 @@
 package application;
 
+import config.VocabularyConfig;
 import controller.Controller;
 import controller.ControllerImpl;
 import data_access.DataAccess;
 import data_access.DataAccessDB;
 import data_access.DataAccessFile;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import validator.Validator;
 import validator.ValidatorImpl;
 import view.View;
@@ -19,38 +22,29 @@ public class Application {
 
     public static void main(String[] args) {
 
+        ApplicationContext context = new AnnotationConfigApplicationContext(VocabularyConfig.class);
+        View view = (View) context.getBean("view");
+        Controller controller;
+        Controller engController = (Controller) context.getBean("engController");
+        Controller numController = (Controller) context.getBean("numController");
+        Scanner scanner = new Scanner(System.in);
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException ex) {
             System.out.println(ex.getMessage());
         }
 
-        Scanner scanner = new Scanner(System.in);
-        View view = new ViewImpl();
-        Vocabulary vocabulary;
-
-        String engTableName = "eng_rus";
-        DataAccess engDataAccess = new DataAccessDB(engTableName);
-        Validator engValidator = new ValidatorImpl("^[a-z]{4}$", "^[а-я]+$");
-        Vocabulary engVocabulary = new VocabularyImpl(engValidator, engDataAccess);
-
-        File numFile = new File("C://vocabularies/num_vocabulary.txt");
-        DataAccess numDataAccess = new DataAccessFile(numFile);
-        Validator numValidator = new ValidatorImpl("^[0-9]{5}$", "^[а-я]+$");
-        Vocabulary numVocabulary = new VocabularyImpl(numValidator, numDataAccess);
-
         view.showVocabularies();
 
         switch (scanner.nextLine()) {
             case "1":
-                vocabulary = engVocabulary; break;
+                controller = engController; break;
             case "2":
-                vocabulary = numVocabulary; break;
+                controller = numController; break;
             default:
-                vocabulary = engVocabulary;
+                controller = engController;
         }
-
-        Controller controller = new ControllerImpl(vocabulary);
 
         boolean exit = false;
         while (!exit) {
