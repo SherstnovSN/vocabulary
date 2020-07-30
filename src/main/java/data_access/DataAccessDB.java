@@ -1,79 +1,58 @@
 package data_access;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.*;
+import domain.Position;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.HashMap;
-import java.util.Properties;
+import java.util.List;
 
 public class DataAccessDB implements DataAccess {
 
-    private String tableName;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    private String url;
-    private String username;
-    private String password;
+    private String tableName;
 
     private String addCommand = "INSERT %s (source, translation) VALUES ('%s', '%s')";
     private String addIfExistsCommand = "UPDATE %s SET translation = '%s' WHERE source = '%s'";
     private String getAllCommand = "SELECT * FROM %s";
-    private String getCommand = "SELECT source, translation FROM %s WHERE source = '%s'";
+    private String getCommand = "SELECT * FROM %s WHERE source = '%s'";
     private String deleteCommand = "DELETE FROM %s WHERE source = '%s'";
 
     public DataAccessDB(String tableName) {
         this.tableName = tableName;
-
-        Properties properties = new Properties();
-
-        try (FileInputStream fis = new FileInputStream("src/main/resources/database.properties")) {
-            properties.load(fis);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        url = properties.getProperty("url");
-        username = properties.getProperty("username");
-        password = properties.getProperty("password");
     }
 
     @Override
     public void add(String source, String translation) {
-        if (get(source).equals("Not found")) execute(String.format(addCommand, tableName, source, translation));
-        else execute(String.format(addIfExistsCommand, tableName, translation, source));
+        if (get(source).equals("Not found")) jdbcTemplate.update(String.format(addCommand, tableName, source, translation));
+        else jdbcTemplate.update(String.format(addIfExistsCommand, tableName, translation, source));
     }
 
     @Override
     public HashMap<String, String> getAll() {
-        return execute(String.format(getAllCommand, tableName));
+        HashMap<String, String> vocabulary = new HashMap<>();
+        List<Position> positions = jdbcTemplate.query(String.format(getAllCommand, tableName), new VocabularyMapper());
+        for (Position position : positions) {
+            vocabulary.put(position.getSource(), position.getTranslation());
+        }
+        return vocabulary;
     }
 
     @Override
     public String get(String source) {
-        HashMap<String, String> vocabulary = execute(String.format(getCommand, tableName, source));
-        if (!(vocabulary.size() == 0)) return vocabulary.get(source);
-        return "Not found";
+        Position position;
+        try {
+            position = (Position) jdbcTemplate.queryForObject(String.format(getCommand, tableName, source), new VocabularyMapper());
+        } catch (EmptyResultDataAccessException ex) { return "Not found"; }
+        return position.getTranslation();
     }
 
     @Override
     public void delete(String source) {
-        execute(String.format(deleteCommand, tableName, source));
-    }
-
-    private HashMap<String, String> execute(String query) {
-        ResultSet resultSet;
-        HashMap<String, String> vocabulary = new HashMap<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password)) {
-            Statement statement = connection.createStatement();
-            boolean checkQueryResult = statement.execute(query);
-            if (checkQueryResult) {
-                resultSet = statement.getResultSet();
-                while (resultSet.next())
-                    vocabulary.put(resultSet.getString("source"), resultSet.getString("translation"));
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return vocabulary;
+        jdbcTemplate.update(String.format(deleteCommand, tableName, source));
     }
 
 }

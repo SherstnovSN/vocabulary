@@ -4,10 +4,12 @@ import config.VocabularyConfig;
 import controller.Controller;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.PropertySource;
 import view.View;
 
 import java.util.Scanner;
 
+@PropertySource("classpath:database.properties")
 public class Application {
 
     public static void main(String[] args) {
@@ -18,12 +20,6 @@ public class Application {
         Controller engController = (Controller) context.getBean("engController");
         Controller numController = (Controller) context.getBean("numController");
         Scanner scanner = new Scanner(System.in);
-
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException ex) {
-            System.out.println(ex.getMessage());
-        }
 
         view.showVocabularies();
 
