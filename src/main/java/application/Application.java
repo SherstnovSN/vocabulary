@@ -2,20 +2,10 @@ package application;
 
 import config.VocabularyConfig;
 import controller.Controller;
-import controller.ControllerImpl;
-import data_access.DataAccess;
-import data_access.DataAccessDB;
-import data_access.DataAccessFile;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import validator.Validator;
-import validator.ValidatorImpl;
 import view.View;
-import view.ViewImpl;
-import vocabulary.Vocabulary;
-import vocabulary.VocabularyImpl;
 
-import java.io.File;
 import java.util.Scanner;
 
 public class Application {
