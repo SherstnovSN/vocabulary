@@ -1,8 +1,8 @@
-package data_access;
+package DAO;
 
 import java.util.HashMap;
 
-public interface DataAccess {
+public interface VocabularyDAO {
 
     void add(String source, String translation);
 

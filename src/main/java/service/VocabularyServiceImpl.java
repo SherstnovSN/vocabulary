@@ -1,20 +1,26 @@
-package vocabulary;
+package service;
 
-import data_access.DataAccess;
+import DAO.VocabularyDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import validator.Validator;
 
 import java.util.Map;
 import java.util.Set;
 
-public class VocabularyImpl implements Vocabulary {
+@Service
+public class VocabularyServiceImpl implements VocabularyService {
 
+    @Autowired
     private Validator validator;
-    private DataAccess dataAccess;
+
+    @Autowired
+    private VocabularyDAO vocabularyDAO;
 
     @Override
     public boolean add(String source, String translation) {
         if (validator.validate(source, translation)) {
-            dataAccess.add(source, translation);
+            vocabularyDAO.add(source, translation);
             return true;
         }
         return false;
@@ -22,26 +28,18 @@ public class VocabularyImpl implements Vocabulary {
 
     @Override
     public Set<Map.Entry<String, String>> getAll() {
-        return dataAccess.getAll().entrySet();
+        return vocabularyDAO.getAll().entrySet();
     }
 
     @Override
     public String get(String source) {
-        return dataAccess.get(source);
+        return vocabularyDAO.get(source);
     }
 
     @Override
     public boolean delete(String source) {
-        dataAccess.delete(source);
+        vocabularyDAO.delete(source);
         return true;
-    }
-
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
-
-    public void setDataAccess(DataAccess dataAccess) {
-        this.dataAccess = dataAccess;
     }
 
 }

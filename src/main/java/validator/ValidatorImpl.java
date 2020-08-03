@@ -2,16 +2,19 @@ package validator;
 
 public class ValidatorImpl implements Validator {
 
-    private final String sourceRegex;
-    private final String translationRegex;
-
-    public ValidatorImpl(String sourceRegex, String translationRegex) {
-        this.sourceRegex = sourceRegex;
-        this.translationRegex = translationRegex;
-    }
+    private String sourceRegex;
+    private String translationRegex;
 
     @Override
     public boolean validate(String source, String translation) {
         return source.matches(sourceRegex) && translation.matches(translationRegex);
+    }
+
+    public void setSourceRegex(String sourceRegex) {
+        this.sourceRegex = sourceRegex;
+    }
+
+    public void setTranslationRegex(String translationRegex) {
+        this.translationRegex = translationRegex;
     }
 }

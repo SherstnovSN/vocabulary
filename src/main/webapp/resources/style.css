@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+}
+
+#main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#content {
+    padding: 0px 20px 15px;
+    background: #f5f5f5;
+    text-align: center;
+    border: 1px solid black;
+}
+
+a {
+    color: lightslategray;
+    text-decoration: none;
+}

@@ -1,4 +1,4 @@
-package data_access;
+package DAO;
 
 import domain.Position;
 import org.springframework.jdbc.core.RowMapper;
