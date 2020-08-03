@@ -1,12 +1,14 @@
 package controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.VocabularyService;
+import validator.Validator;
 
 import java.util.Map;
 import java.util.Set;
@@ -17,8 +19,33 @@ public class VocabularyController {
     @Autowired
     private VocabularyService vocabularyService;
 
+    @Autowired
+    @Qualifier("engValidator")
+    private Validator engValidator;
+
+    @Autowired
+    @Qualifier("numValidator")
+    private Validator numValidator;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String showSelectPage() {
+        return "select-vocabulary";
+    }
+
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String showHomePage() {
+        return "home";
+    }
+
+    @RequestMapping(value = "/english", method = RequestMethod.GET)
+    public String selectEnglishVocabulary() {
+        vocabularyService.setVocabulary(engValidator, "eng_rus");
+        return "home";
+    }
+
+    @RequestMapping(value = "/number", method = RequestMethod.GET)
+    public String selectNumberVocabulary() {
+        vocabularyService.setVocabulary(numValidator, "num_rus");
         return "home";
     }
 
@@ -31,7 +58,7 @@ public class VocabularyController {
     public String addPositionToVocabulary(@RequestParam(value = "source") String source,
                                           @RequestParam(value = "translation") String translation) {
         vocabularyService.add(source, translation);
-        return "redirect:/";
+        return "redirect:/home";
     }
 
     @RequestMapping(value = "/vocabulary", method = RequestMethod.GET)
@@ -63,7 +90,7 @@ public class VocabularyController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deletePosition(@RequestParam(value = "source") String source) {
         vocabularyService.delete(source);
-        return "redirect:/";
+        return "redirect:/home";
     }
 
 }
