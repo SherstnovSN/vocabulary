@@ -16,10 +16,15 @@
                 <a href="<c:url value="/translate"/>">Перевести</a>
                 <a href="<c:url value="/delete"/>">Удалить</a>
                 <br><br>
-                <c:forEach var="position" items="${vocabulary}">
-                    ${position.key} ${position.value}
-                    <br><br>
-                </c:forEach>
+                <c:if test="${vocabulary.size() != 0}">
+                    <c:forEach var="position" items="${vocabulary}">
+                        ${position.key} ${position.value}
+                        <br><br>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${vocabulary.size() == 0}">
+                    Словарь пуст
+                </c:if>
             </div>
         </div>
     </body>

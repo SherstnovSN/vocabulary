@@ -49,7 +49,9 @@ public class VocabularyController {
     @RequestMapping(value = "/translation", method = RequestMethod.POST)
     public String showTranslationPage(@RequestParam(value = "source") String source, Model model) {
         model.addAttribute("source", source);
-        model.addAttribute("translation", vocabularyService.get(source));
+        String translation = vocabularyService.get(source);
+        if (translation.equals("Not found")) model.addAttribute("translation", "слово не найдено");
+        else model.addAttribute("translation", translation);
         return "translation";
     }
 
@@ -61,7 +63,7 @@ public class VocabularyController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deletePosition(@RequestParam(value = "source") String source) {
         vocabularyService.delete(source);
-        return "delete";
+        return "redirect:/";
     }
 
 }
