@@ -1,19 +1,19 @@
 package service;
 
+import domain.Position;
 import validator.Validator;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 public interface VocabularyService {
 
-    void setVocabulary(Validator validator, String tableName);
+    void setValidator(Validator validator);
 
     boolean add(String source, String translation);
 
-    Set<Map.Entry<String, String>> getAll();
+    List<Position> getAll();
 
-    String get(String source);
+    Position get(String source);
 
     boolean delete(String source);
 

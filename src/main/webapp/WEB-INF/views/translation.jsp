@@ -16,7 +16,7 @@
         <a href="<c:url value="/translate"/>">Перевести</a>
         <a href="<c:url value="/delete"/>">Удалить</a>
         <br><br>
-        ${source} - ${translation}
+        ${position.source} - ${position.translation}
     </div>
 </div>
 </body>

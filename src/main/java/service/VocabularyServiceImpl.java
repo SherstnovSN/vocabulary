@@ -1,14 +1,16 @@
 package service;
 
 import DAO.VocabularyDAO;
+import domain.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import validator.Validator;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 @Service
+@Transactional
 public class VocabularyServiceImpl implements VocabularyService {
 
     private Validator validator;
@@ -17,33 +19,36 @@ public class VocabularyServiceImpl implements VocabularyService {
     private VocabularyDAO vocabularyDAO;
 
     @Override
-    public void setVocabulary(Validator validator, String tableName) {
+    public void setValidator(Validator validator) {
         this.validator = validator;
-        vocabularyDAO.setTableName(tableName);
     }
 
     @Override
     public boolean add(String source, String translation) {
         if (validator.validate(source, translation)) {
-            vocabularyDAO.add(source, translation);
+            Position position = new Position();
+            position.setSource(source);
+            position.setTranslation(translation);
+            vocabularyDAO.add(position);
             return true;
         }
         return false;
     }
 
     @Override
-    public Set<Map.Entry<String, String>> getAll() {
-        return vocabularyDAO.getAll().entrySet();
+    public List<Position> getAll() {
+        return vocabularyDAO.getAll();
     }
 
     @Override
-    public String get(String source) {
+    public Position get(String source) {
         return vocabularyDAO.get(source);
     }
 
     @Override
     public boolean delete(String source) {
-        vocabularyDAO.delete(source);
+        Position position = get(source);
+        vocabularyDAO.delete(position);
         return true;
     }
 

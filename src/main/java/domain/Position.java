@@ -1,19 +1,17 @@
 package domain;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "eng_rus")
 public class Position {
 
-    private int id;
+    @Id
+    @Column(name = "source")
     private String source;
+
+    @Column(name = "translation")
     private String translation;
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getSource() {
         return source;

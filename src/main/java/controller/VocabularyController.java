@@ -1,5 +1,6 @@
 package controller;
 
+import domain.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -10,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import service.VocabularyService;
 import validator.Validator;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 @Controller
 public class VocabularyController {
@@ -39,13 +39,13 @@ public class VocabularyController {
 
     @RequestMapping(value = "/english", method = RequestMethod.GET)
     public String selectEnglishVocabulary() {
-        vocabularyService.setVocabulary(engValidator, "eng_rus");
+        vocabularyService.setValidator(engValidator);
         return "home";
     }
 
     @RequestMapping(value = "/number", method = RequestMethod.GET)
     public String selectNumberVocabulary() {
-        vocabularyService.setVocabulary(numValidator, "num_rus");
+        vocabularyService.setValidator(numValidator);
         return "home";
     }
 
@@ -63,7 +63,7 @@ public class VocabularyController {
 
     @RequestMapping(value = "/vocabulary", method = RequestMethod.GET)
     public String showVocabulary(Model model) {
-        Set<Map.Entry<String, String>> vocabulary = vocabularyService.getAll();
+        List<Position> vocabulary = vocabularyService.getAll();
         model.addAttribute("vocabulary", vocabulary);
         return "vocabulary";
     }
@@ -75,10 +75,7 @@ public class VocabularyController {
 
     @RequestMapping(value = "/translation", method = RequestMethod.POST)
     public String showTranslationPage(@RequestParam(value = "source") String source, Model model) {
-        model.addAttribute("source", source);
-        String translation = vocabularyService.get(source);
-        if (translation.equals("Not found")) model.addAttribute("translation", "слово не найдено");
-        else model.addAttribute("translation", translation);
+        model.addAttribute("position", vocabularyService.get(source));
         return "translation";
     }
 

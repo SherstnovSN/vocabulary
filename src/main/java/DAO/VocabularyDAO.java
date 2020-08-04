@@ -1,17 +1,17 @@
 package DAO;
 
-import java.util.HashMap;
+import domain.Position;
+
+import java.util.List;
 
 public interface VocabularyDAO {
 
-    void add(String source, String translation);
+    void add(Position position);
 
-    HashMap<String, String> getAll();
+    List<Position> getAll();
 
-    String get(String source);
+    Position get(String source);
 
-    void delete(String source);
-
-    void setTableName(String tableName);
+    void delete(Position position);
 
 }

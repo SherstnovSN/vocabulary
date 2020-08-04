@@ -18,7 +18,7 @@
                 <br><br>
                 <c:if test="${vocabulary.size() != 0}">
                     <c:forEach var="position" items="${vocabulary}">
-                        ${position.key} ${position.value}
+                        ${position.source} ${position.translation}
                         <br><br>
                     </c:forEach>
                 </c:if>
