@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface VocabularyService {
 
-    void setValidator(Validator validator);
-
     boolean add(String source, String translation);
 
     List<Position> getAll();

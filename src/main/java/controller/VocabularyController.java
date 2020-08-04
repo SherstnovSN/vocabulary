@@ -19,33 +19,8 @@ public class VocabularyController {
     @Autowired
     private VocabularyService vocabularyService;
 
-    @Autowired
-    @Qualifier("engValidator")
-    private Validator engValidator;
-
-    @Autowired
-    @Qualifier("numValidator")
-    private Validator numValidator;
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String showSelectPage() {
-        return "select-vocabulary";
-    }
-
-    @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public String showHomePage() {
-        return "home";
-    }
-
-    @RequestMapping(value = "/english", method = RequestMethod.GET)
-    public String selectEnglishVocabulary() {
-        vocabularyService.setValidator(engValidator);
-        return "home";
-    }
-
-    @RequestMapping(value = "/number", method = RequestMethod.GET)
-    public String selectNumberVocabulary() {
-        vocabularyService.setValidator(numValidator);
         return "home";
     }
 
@@ -58,7 +33,7 @@ public class VocabularyController {
     public String addPositionToVocabulary(@RequestParam(value = "source") String source,
                                           @RequestParam(value = "translation") String translation) {
         vocabularyService.add(source, translation);
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/vocabulary", method = RequestMethod.GET)
@@ -87,7 +62,7 @@ public class VocabularyController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deletePosition(@RequestParam(value = "source") String source) {
         vocabularyService.delete(source);
-        return "redirect:/home";
+        return "redirect:/";
     }
 
 }

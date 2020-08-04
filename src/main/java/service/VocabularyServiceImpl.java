@@ -13,15 +13,11 @@ import java.util.List;
 @Transactional
 public class VocabularyServiceImpl implements VocabularyService {
 
+    @Autowired
     private Validator validator;
 
     @Autowired
     private VocabularyDAO vocabularyDAO;
-
-    @Override
-    public void setValidator(Validator validator) {
-        this.validator = validator;
-    }
 
     @Override
     public boolean add(String source, String translation) {

@@ -18,13 +18,8 @@
     <mvc:annotation-driven />
     <tx:annotation-driven />
 
-    <bean id="engValidator" class="validator.ValidatorImpl">
+    <bean id="validator" class="validator.ValidatorImpl">
         <property name="sourceRegex" value="^[a-z]{4}$" />
-        <property name="translationRegex" value="^[а-я]+$" />
-    </bean>
-
-    <bean id="numValidator" class="validator.ValidatorImpl">
-        <property name="sourceRegex" value="^[0-9]{5}$" />
         <property name="translationRegex" value="^[а-я]+$" />
     </bean>
 
