@@ -20,7 +20,7 @@ public class VocabularyController {
     private VocabularyService vocabularyService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String showSelectPage() {
+    public String homePage() {
         return "home";
     }
 
