@@ -11,9 +11,10 @@
         <div id="main">
             <div id="content">
                 <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
-                <c:forEach var="vocabulary" items="${vocabularies}">
-                    <a href="<c:url value="/menu/${vocabulary.id}" />">${vocabulary.name}</a>
-                </c:forEach>
+                <a href="<c:url value="/add"/>">Добавить</a>
+                <a href="<c:url value="/vocabulary"/>">Отобразить</a>
+                <a href="<c:url value="/translate"/>">Перевести</a>
+                <a href="<c:url value="/delete"/>">Удалить</a>
             </div>
         </div>
     </body>

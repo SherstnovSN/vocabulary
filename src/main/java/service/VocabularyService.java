@@ -1,18 +1,12 @@
 package service;
 
-import domain.Position;
-import validator.Validator;
+import domain.Vocabulary;
 
 import java.util.List;
 
 public interface VocabularyService {
 
-    boolean add(String source, String translation);
+    List<Vocabulary> getAll();
 
-    List<Position> getAll();
-
-    Position get(String source);
-
-    boolean delete(String source);
-
+    Vocabulary getById(int id);
 }

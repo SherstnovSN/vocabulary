@@ -1,20 +1,18 @@
 package validator;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ValidatorImpl implements Validator {
 
-    private String sourceRegex;
-    private String translationRegex;
+    @Override
+    public boolean validate(String source, String sourceRegex) {
+        return source.matches(sourceRegex);
+    }
 
     @Override
-    public boolean validate(String source, String translation) {
+    public boolean validate(String source, String sourceRegex, String translation, String translationRegex) {
         return source.matches(sourceRegex) && translation.matches(translationRegex);
     }
 
-    public void setSourceRegex(String sourceRegex) {
-        this.sourceRegex = sourceRegex;
-    }
-
-    public void setTranslationRegex(String translationRegex) {
-        this.translationRegex = translationRegex;
-    }
 }

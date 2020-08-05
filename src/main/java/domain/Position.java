@@ -3,7 +3,7 @@ package domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "eng_rus")
+@Table(name = "position")
 public class Position {
 
     @Id
@@ -12,6 +12,10 @@ public class Position {
 
     @Column(name = "translation")
     private String translation;
+
+    @ManyToOne
+    @JoinColumn(name = "vocabulary_id", referencedColumnName = "id")
+    private Vocabulary vocabulary;
 
     public String getSource() {
         return source;
@@ -27,5 +31,13 @@ public class Position {
 
     public void setTranslation(String translation) {
         this.translation = translation;
+    }
+
+    public Vocabulary getVocabulary() {
+        return vocabulary;
+    }
+
+    public void setVocabulary(Vocabulary vocabulary) {
+        this.vocabulary = vocabulary;
     }
 }

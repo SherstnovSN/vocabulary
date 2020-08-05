@@ -1,6 +1,6 @@
 package DAO;
 
-import domain.Position;
+import domain.Vocabulary;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,29 +15,16 @@ public class VocabularyDAOImpl implements VocabularyDAO{
     private SessionFactory sessionFactory;
 
     @Override
-    public void add(Position position) {
-        Session session = sessionFactory.getCurrentSession();
-        session. persist(position);
-    }
-
-
-    @Override
     @SuppressWarnings("unchecked")
-    public List<Position> getAll() {
+    public List<Vocabulary> getAll() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("FROM Position").list();
+        return session.createQuery("FROM Vocabulary").list();
     }
 
     @Override
-    public Position get(String source) {
+    public Vocabulary getById(int id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Position.class, source);
-    }
-
-    @Override
-    public void delete(Position position) {
-        Session session = sessionFactory.getCurrentSession();
-        session.delete(position);
+        return session.get(Vocabulary.class, id);
     }
 
 }

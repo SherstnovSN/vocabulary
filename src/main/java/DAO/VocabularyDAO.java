@@ -1,17 +1,12 @@
 package DAO;
 
-import domain.Position;
+import domain.Vocabulary;
 
 import java.util.List;
 
 public interface VocabularyDAO {
 
-    void add(Position position);
+    List<Vocabulary> getAll();
 
-    List<Position> getAll();
-
-    Position get(String source);
-
-    void delete(Position position);
-
+    Vocabulary getById(int id);
 }
