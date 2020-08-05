@@ -29,7 +29,7 @@ public class PositionServiceImpl implements PositionService{
 
     @Override
     public boolean add(String source, String translation) {
-        if (validator.validate(source, translation, vocabulary.getSourceRegex(), vocabulary.getTranslationRegex())) {
+        if (validator.validate(source, vocabulary.getSourceRegex(), translation, vocabulary.getTranslationRegex())) {
             Position position = new Position();
             position.setSource(source);
             position.setTranslation(translation);
