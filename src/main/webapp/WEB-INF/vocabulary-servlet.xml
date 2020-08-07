@@ -13,7 +13,7 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <context:component-scan base-package="controller, DAO, service, validator" />
+    <context:component-scan base-package="controller, DAO, service, validator, domain" />
     <mvc:resources mapping="/resources/**" location="/resources/" />
     <mvc:annotation-driven />
     <tx:annotation-driven />

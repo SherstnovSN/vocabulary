@@ -1,13 +1,10 @@
 package service;
 
 import domain.Position;
-import domain.Vocabulary;
 
 import java.util.List;
 
 public interface PositionService {
-
-    void setVocabulary(Vocabulary vocabulary);
 
     boolean add(String source, String translation);
 

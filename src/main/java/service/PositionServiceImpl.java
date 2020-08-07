@@ -2,7 +2,7 @@ package service;
 
 import DAO.PositionDAO;
 import domain.Position;
-import domain.Vocabulary;
+import domain.VocabularyHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import validator.Validator;
@@ -20,20 +20,18 @@ public class PositionServiceImpl implements PositionService{
     @Autowired
     private PositionDAO positionDAO;
 
-    private Vocabulary vocabulary;
-
-    @Override
-    public void setVocabulary(Vocabulary vocabulary) {
-        this.vocabulary = vocabulary;
-    }
+    @Autowired
+    private VocabularyHolder vocabularyHolder;
 
     @Override
     public boolean add(String source, String translation) {
-        if (validator.validate(source, vocabulary.getSourceRegex(), translation, vocabulary.getTranslationRegex())) {
+        String sourceRegex = vocabularyHolder.getVocabulary().getSourceRegex();
+        String translationRegex = vocabularyHolder.getVocabulary().getTranslationRegex();
+        if (validator.validate(source, sourceRegex, translation, translationRegex)) {
             Position position = new Position();
             position.setSource(source);
             position.setTranslation(translation);
-            position.setVocabulary(vocabulary);
+            position.setVocabulary(vocabularyHolder.getVocabulary());
             positionDAO.add(position);
             return true;
         }
@@ -42,12 +40,14 @@ public class PositionServiceImpl implements PositionService{
 
     @Override
     public List<Position> getAll() {
-        return positionDAO.getAll(vocabulary.getId());
+        int vocabularyId = vocabularyHolder.getVocabulary().getId();
+        return positionDAO.getAll(vocabularyId);
     }
 
     @Override
     public Position get(String source) {
-        if (validator.validate(source, vocabulary.getSourceRegex())) return positionDAO.get(source);
+        String sourceRegex = vocabularyHolder.getVocabulary().getSourceRegex();
+        if (validator.validate(source, sourceRegex)) return positionDAO.get(source);
         return null;
     }
 

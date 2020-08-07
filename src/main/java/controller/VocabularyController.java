@@ -1,6 +1,7 @@
 package controller;
 
 import domain.Position;
+import domain.VocabularyHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,9 @@ import java.util.List;
 
 @Controller
 public class VocabularyController {
+
+    @Autowired
+    private VocabularyHolder vocabularyHolder;
 
     @Autowired
     private VocabularyService vocabularyService;
@@ -35,7 +39,7 @@ public class VocabularyController {
 
     @RequestMapping(value = "/menu/{id}", method = RequestMethod.GET)
     public String setVocabularyMenuPage(@PathVariable(value = "id") int id) {
-        positionService.setVocabulary(vocabularyService.getById(id));
+        vocabularyHolder.setVocabulary(vocabularyService.getById(id));
         return "menu";
     }
 
