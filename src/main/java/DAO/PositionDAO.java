@@ -8,7 +8,7 @@ public interface PositionDAO {
 
     void add(Position position);
 
-    List<Position> getAll(int vocabularyId);
+    List<Position> getAll();
 
     Position get(String source);
 

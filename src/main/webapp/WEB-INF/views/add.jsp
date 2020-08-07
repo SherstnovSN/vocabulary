@@ -11,14 +11,19 @@
         <div id="main">
             <div id="content">
                 <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
-                <a href="<c:url value="/add"/>">Добавить</a>
-                <a href="<c:url value="/vocabulary"/>">Отобразить</a>
-                <a href="<c:url value="/translate"/>">Перевести</a>
-                <a href="<c:url value="/delete"/>">Удалить</a>
-                <br><br>
                 <c:url value="/add" var="addPosition"/>
                 <form action="${addPosition}" method="POST">
                     <table>
+                        <tr>
+                            <td><label for="vocabulary">Словарь</label></td>
+                            <td>
+                                <select id="vocabulary" name="vocabulary">
+                                    <c:forEach var="vocabulary" items="${vocabularies}">
+                                        <option value="${vocabulary.id}">${vocabulary.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </td>
+                        </tr>
                         <tr>
                             <td><label for="source">Слово</label></td>
                             <td><input id="source" type="text" name="source" required autofocus></td>

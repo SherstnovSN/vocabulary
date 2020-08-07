@@ -22,9 +22,9 @@ public class PositionDAOImpl implements PositionDAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Position> getAll(int vocabularyId) {
+    public List<Position> getAll() {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("FROM Position P WHERE P.vocabulary = " + vocabularyId).list();
+        return session.createQuery("FROM Position").list();
     }
 
     @Override

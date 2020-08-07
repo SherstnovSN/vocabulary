@@ -11,11 +11,6 @@
 <div id="main">
     <div id="content">
         <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
-        <a href="<c:url value="/add"/>">Добавить</a>
-        <a href="<c:url value="/vocabulary"/>">Отобразить</a>
-        <a href="<c:url value="/translate"/>">Перевести</a>
-        <a href="<c:url value="/delete"/>">Удалить</a>
-        <br><br>
         ${position.source} - ${position.translation}
     </div>
 </div>

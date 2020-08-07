@@ -22,7 +22,7 @@ public class Vocabulary {
     @Column(name = "translation_regex")
     private String translationRegex;
 
-    @OneToMany(mappedBy = "vocabulary")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "vocabulary")
     private Set<Position> positions = new HashSet<>();
 
     public int getId() {

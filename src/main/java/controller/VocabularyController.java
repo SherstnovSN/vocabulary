@@ -1,7 +1,6 @@
 package controller;
 
-import domain.Position;
-import domain.VocabularyHolder;
+import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +17,6 @@ import java.util.List;
 public class VocabularyController {
 
     @Autowired
-    private VocabularyHolder vocabularyHolder;
-
-    @Autowired
     private VocabularyService vocabularyService;
 
     @Autowired
@@ -28,38 +24,25 @@ public class VocabularyController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String homePage(Model model) {
-        model.addAttribute("vocabularies", vocabularyService.getAll());
+        List<Vocabulary> vocabularies = vocabularyService.getAll();
+        model.addAttribute("vocabularies", vocabularies);
         return "home";
     }
 
-    @RequestMapping(value = "/menu", method = RequestMethod.GET)
-    public String menuPage() {
-        return "menu";
-    }
-
-    @RequestMapping(value = "/menu/{id}", method = RequestMethod.GET)
-    public String setVocabularyMenuPage(@PathVariable(value = "id") int id) {
-        vocabularyHolder.setVocabulary(vocabularyService.getById(id));
-        return "menu";
-    }
-
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addPositionToVocabularyPage() {
+    public String addPositionToVocabularyPage(Model model) {
+        List<Vocabulary> vocabularies = vocabularyService.getAll();
+        model.addAttribute("vocabularies", vocabularies);
         return "add";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addPositionToVocabulary(@RequestParam(value = "source") String source,
-                                          @RequestParam(value = "translation") String translation) {
-        positionService.add(source, translation);
-        return "redirect:/menu";
-    }
-
-    @RequestMapping(value = "/vocabulary", method = RequestMethod.GET)
-    public String showVocabulary(Model model) {
-        List<Position> vocabulary = positionService.getAll();
-        model.addAttribute("vocabulary", vocabulary);
-        return "vocabulary";
+                                          @RequestParam(value = "translation") String translation,
+                                          @RequestParam(value = "vocabulary") int vocabularyId) {
+        Vocabulary vocabulary = vocabularyService.getById(vocabularyId);
+        positionService.add(source, translation, vocabulary);
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/translate", method = RequestMethod.GET)
@@ -69,25 +52,14 @@ public class VocabularyController {
 
     @RequestMapping(value = "/translation", method = RequestMethod.POST)
     public String showTranslationPage(@RequestParam(value = "source") String source, Model model) {
-        Position position = positionService.get(source);
-        if (position == null) {
-            position = new Position();
-            position.setSource("отсутствует");
-            position.setTranslation("отсутствует");
-        }
-        model.addAttribute("position", position);
+        model.addAttribute("position", positionService.get(source));
         return "translation";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    public String deletePositionPage() {
-        return "delete";
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deletePosition(@RequestParam(value = "source") String source) {
+    @RequestMapping(value = "/delete/{source}", method = RequestMethod.GET)
+    public String deletePositionPage(@PathVariable String source) {
         positionService.delete(source);
-        return "redirect:/menu";
+        return "redirect:/";
     }
 
 }

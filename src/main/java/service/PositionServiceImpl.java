@@ -2,7 +2,7 @@ package service;
 
 import DAO.PositionDAO;
 import domain.Position;
-import domain.VocabularyHolder;
+import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import validator.Validator;
@@ -20,18 +20,13 @@ public class PositionServiceImpl implements PositionService{
     @Autowired
     private PositionDAO positionDAO;
 
-    @Autowired
-    private VocabularyHolder vocabularyHolder;
-
     @Override
-    public boolean add(String source, String translation) {
-        String sourceRegex = vocabularyHolder.getVocabulary().getSourceRegex();
-        String translationRegex = vocabularyHolder.getVocabulary().getTranslationRegex();
-        if (validator.validate(source, sourceRegex, translation, translationRegex)) {
+    public boolean add(String source, String translation, Vocabulary vocabulary) {
+        if (validator.validate(source, vocabulary.getSourceRegex(), translation, vocabulary.getTranslationRegex())) {
             Position position = new Position();
             position.setSource(source);
             position.setTranslation(translation);
-            position.setVocabulary(vocabularyHolder.getVocabulary());
+            position.setVocabulary(vocabulary);
             positionDAO.add(position);
             return true;
         }
@@ -40,25 +35,25 @@ public class PositionServiceImpl implements PositionService{
 
     @Override
     public List<Position> getAll() {
-        int vocabularyId = vocabularyHolder.getVocabulary().getId();
-        return positionDAO.getAll(vocabularyId);
+        return positionDAO.getAll();
     }
 
     @Override
     public Position get(String source) {
-        String sourceRegex = vocabularyHolder.getVocabulary().getSourceRegex();
-        if (validator.validate(source, sourceRegex)) return positionDAO.get(source);
-        return null;
+        Position position = positionDAO.get(source);
+        if (position == null) {
+            position = new Position();
+            position.setSource("отсутствует");
+            position.setTranslation("отсутствует");
+        }
+        return position;
     }
 
     @Override
     public boolean delete(String source) {
-        Position position = get(source);
-        if (position != null) {
-            positionDAO.delete(position);
-            return true;
-        }
-        return false;
+        Position position = positionDAO.get(source);
+        positionDAO.delete(position);
+        return true;
     }
 
 }
