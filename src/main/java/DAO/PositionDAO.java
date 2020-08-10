@@ -10,7 +10,7 @@ public interface PositionDAO {
 
     List<Position> getAll();
 
-    Position get(String source);
+    Position getFromAllVocabularies(String source);
 
     void edit(Position position);
 

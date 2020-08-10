@@ -46,19 +46,23 @@ public class VocabularyController {
     }
 
     @RequestMapping(value = "/translate", method = RequestMethod.GET)
-    public String showTranslationPage() {
+    public String showTranslationPage(Model model) {
+        List<Vocabulary> vocabularies = vocabularyService.getAll();
+        model.addAttribute("vocabularies", vocabularies);
         return "translate";
     }
 
     @RequestMapping(value = "/translation", method = RequestMethod.POST)
-    public String showTranslationPage(@RequestParam(value = "source") String source, Model model) {
-        model.addAttribute("position", positionService.get(source));
+    public String showTranslationPage(@RequestParam(value = "source") String source,
+                                      @RequestParam(value = "vocabulary") int vocabularyId,
+                                      Model model) {
+        if (vocabularyId == 0) model.addAttribute("position", positionService.getFromAllVocabularies(source));
         return "translation";
     }
 
     @RequestMapping(value = "/edit/{source}", method = RequestMethod.GET)
     public String showEditPage(@PathVariable String source, Model model) {
-        model.addAttribute("position", positionService.get(source));
+        model.addAttribute("position", positionService.getFromAllVocabularies(source));
         return "edit";
     }
 

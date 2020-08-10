@@ -28,7 +28,7 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
-    public Position get(String source) {
+    public Position getFromAllVocabularies(String source) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Position.class, source);
     }

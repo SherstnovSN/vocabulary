@@ -11,7 +11,7 @@ public interface PositionService {
 
     List<Position> getAll();
 
-    Position get(String source);
+    Position getFromAllVocabularies(String source);
 
     boolean edit(String source, String translation);
 

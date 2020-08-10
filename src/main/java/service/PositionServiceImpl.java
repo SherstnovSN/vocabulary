@@ -39,8 +39,8 @@ public class PositionServiceImpl implements PositionService{
     }
 
     @Override
-    public Position get(String source) {
-        Position position = positionDAO.get(source);
+    public Position getFromAllVocabularies(String source) {
+        Position position = positionDAO.getFromAllVocabularies(source);
         if (position == null) {
             position = new Position();
             position.setSource("отсутствует");
@@ -51,7 +51,7 @@ public class PositionServiceImpl implements PositionService{
 
     @Override
     public boolean edit(String source, String translation) {
-        Position position = positionDAO.get(source);
+        Position position = positionDAO.getFromAllVocabularies(source);
         position.setTranslation(translation);
         positionDAO.edit(position);
         return true;
@@ -59,7 +59,7 @@ public class PositionServiceImpl implements PositionService{
 
     @Override
     public boolean delete(String source) {
-        Position position = positionDAO.get(source);
+        Position position = positionDAO.getFromAllVocabularies(source);
         positionDAO.delete(position);
         return true;
     }
