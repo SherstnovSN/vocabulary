@@ -16,6 +16,7 @@ body {
 }
 
 a {
+    cursor: pointer;
     color: lightslategray;
     text-decoration: none;
 }

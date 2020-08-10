@@ -4,7 +4,6 @@ import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,10 +55,9 @@ public class VocabularyController {
         return "translation";
     }
 
-    @RequestMapping(value = "/delete/{source}", method = RequestMethod.GET)
-    public String deletePositionPage(@PathVariable String source) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public void deletePositionPage(@RequestParam(value = "source") String source) {
         positionService.delete(source);
-        return "redirect:/";
     }
 
 }
