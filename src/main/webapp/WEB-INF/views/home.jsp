@@ -24,9 +24,13 @@
                             <c:if test="${vocabulary.positions.size() != 0}">
                                 <c:forEach var="position" items="${vocabulary.positions}">
                                     <c:set var="positionSource" value="${position.source}" />
-                                    <div class="${positionSource}">
-                                        <li>${positionSource} - ${position.translation} <a title="Удалить" onclick="doAjax('${positionSource}')"><strong>x</strong></a></li>
-                                    </div>
+                                        <li>
+                                            <div class="${positionSource}">
+                                                ${positionSource} - ${position.translation}
+                                                <a href="<c:url value="/edit/${positionSource}"/>" title="Редактировать"><strong>_</strong></a>
+                                                <a title="Удалить" onclick="doAjax('${positionSource}')"><strong>x</strong></a>
+                                            </div>
+                                        </li>
                                 </c:forEach>
                             </c:if>
                             <c:if test="${vocabulary.positions.size() == 0}">

@@ -13,6 +13,8 @@ public interface PositionService {
 
     Position get(String source);
 
+    boolean edit(String source, String translation);
+
     boolean delete(String source);
 
 }

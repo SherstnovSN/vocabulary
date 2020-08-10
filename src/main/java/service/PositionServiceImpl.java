@@ -50,6 +50,14 @@ public class PositionServiceImpl implements PositionService{
     }
 
     @Override
+    public boolean edit(String source, String translation) {
+        Position position = positionDAO.get(source);
+        position.setTranslation(translation);
+        positionDAO.edit(position);
+        return true;
+    }
+
+    @Override
     public boolean delete(String source) {
         Position position = positionDAO.get(source);
         positionDAO.delete(position);

@@ -12,6 +12,8 @@ public interface PositionDAO {
 
     Position get(String source);
 
+    void edit(Position position);
+
     void delete(Position position);
 
 }

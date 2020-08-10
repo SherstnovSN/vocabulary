@@ -34,6 +34,12 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
+    public void edit(Position position) {
+        Session session = sessionFactory.getCurrentSession();
+        session.update(position);
+    }
+
+    @Override
     public void delete(Position position) {
         Session session = sessionFactory.getCurrentSession();
         session.delete(position);

@@ -4,6 +4,7 @@ import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +54,19 @@ public class VocabularyController {
     public String showTranslationPage(@RequestParam(value = "source") String source, Model model) {
         model.addAttribute("position", positionService.get(source));
         return "translation";
+    }
+
+    @RequestMapping(value = "/edit/{source}", method = RequestMethod.GET)
+    public String showEditPage(@PathVariable String source, Model model) {
+        model.addAttribute("position", positionService.get(source));
+        return "edit";
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String editPosition(@RequestParam(value = "source") String source,
+                               @RequestParam(value = "translation") String translation) {
+        positionService.edit(source, translation);
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
