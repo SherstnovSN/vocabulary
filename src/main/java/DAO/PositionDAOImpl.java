@@ -1,8 +1,10 @@
 package DAO;
 
 import domain.Position;
+import domain.Vocabulary;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +33,15 @@ public class PositionDAOImpl implements PositionDAO {
     public Position getFromAllVocabularies(String source) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Position.class, source);
+    }
+
+    @Override
+    public Position getFromVocabulary(String source, Vocabulary vocabulary) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Position P WHERE P.source = :source AND P.vocabulary = :vocabulary");
+        query.setParameter("source", source);
+        query.setParameter("vocabulary", vocabulary);
+        return (Position) query.uniqueResult();
     }
 
     @Override

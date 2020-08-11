@@ -13,6 +13,8 @@ public interface PositionService {
 
     Position getFromAllVocabularies(String source);
 
+    Position getFromVocabulary(String source, Vocabulary vocabulary);
+
     boolean edit(String source, String translation);
 
     boolean delete(String source);

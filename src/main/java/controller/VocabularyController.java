@@ -57,6 +57,7 @@ public class VocabularyController {
                                       @RequestParam(value = "vocabulary") int vocabularyId,
                                       Model model) {
         if (vocabularyId == 0) model.addAttribute("position", positionService.getFromAllVocabularies(source));
+        else model.addAttribute("position", positionService.getFromVocabulary(source, vocabularyService.getById(vocabularyId)));
         return "translation";
     }
 

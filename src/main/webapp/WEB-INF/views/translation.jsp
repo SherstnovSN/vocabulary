@@ -14,7 +14,12 @@
             <a href="<c:url value="/add"/>">Добавить</a>
             <a href="<c:url value="/translate"/>">Перевести</a>
             <br><br>
-            ${position.source} - ${position.translation}
+            <c:if test="${position.source != null}">
+                ${position.source} - ${position.translation}
+            </c:if>
+            <c:if test="${position.source == null}">
+                Слово отсутствует
+            </c:if>
         </div>
     </div>
     </body>

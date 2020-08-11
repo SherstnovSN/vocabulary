@@ -40,13 +40,12 @@ public class PositionServiceImpl implements PositionService{
 
     @Override
     public Position getFromAllVocabularies(String source) {
-        Position position = positionDAO.getFromAllVocabularies(source);
-        if (position == null) {
-            position = new Position();
-            position.setSource("отсутствует");
-            position.setTranslation("отсутствует");
-        }
-        return position;
+        return positionDAO.getFromAllVocabularies(source);
+    }
+
+    @Override
+    public Position getFromVocabulary(String source, Vocabulary vocabulary) {
+        return positionDAO.getFromVocabulary(source, vocabulary);
     }
 
     @Override
