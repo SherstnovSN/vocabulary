@@ -6,7 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Словарь</title>
         <link href="<c:url value="/resources/style.css"/>" rel="stylesheet" type="text/css" />
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
         <style>
             h4 { cursor:pointer;}
         </style>
@@ -26,7 +26,7 @@
                                     <c:set var="positionSource" value="${position.source}" />
                                         <li>
                                             <div class="${positionSource}">
-                                                ${positionSource} - <c:forEach var="translation" items="${position.translations}">${translation.word} </c:forEach>
+                                                <strong>${positionSource}</strong> - <c:forEach var="translation" items="${position.translations}">${translation.word} </c:forEach>
                                                 <a href="<c:url value="/editPosition/${positionSource}"/>" title="Редактировать"><strong>_</strong></a>
                                                 <a title="Удалить" onclick="doAjax('${positionSource}')"><strong>x</strong></a>
                                             </div>

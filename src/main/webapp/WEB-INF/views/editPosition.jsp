@@ -6,7 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Редактировать</title>
         <link href="<c:url value="/resources/style.css"/>" rel="stylesheet" type="text/css" />
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     </head>
     <body>
         <div id="main">

@@ -6,7 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Добавить</title>
         <link href="<c:url value="/resources/style.css"/>" rel="stylesheet" type="text/css" />
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     </head>
     <body>
         <div id="main">
@@ -33,13 +33,12 @@
                     <input type="submit" value="Добавить">
                 </form>
                 <script>
-                    var x = 0;
+                    let x = 0;
                     function addInput() {
-                        var str = '<label for="translation">Перевод</label> ' +
+                        document.getElementById('input' + x).innerHTML = '<label for="translation">Перевод</label> ' +
                             '<input id="translation" type="text" name="translations">' +
                             '<br><br>' +
                             '<div id="input' + (x + 1) + '"></div>';
-                        document.getElementById('input' + x).innerHTML = str;
                         x++;
                     }
                 </script>
