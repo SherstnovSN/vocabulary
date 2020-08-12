@@ -1,8 +1,8 @@
 package domain;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "vocabulary")
@@ -23,7 +23,7 @@ public class Vocabulary {
     private String translationRegex;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "vocabulary")
-    private Set<Position> positions = new HashSet<>();
+    private List<Position> positions = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -53,11 +53,11 @@ public class Vocabulary {
         this.translationRegex = translationRegex;
     }
 
-    public Set<Position> getPositions() {
+    public List<Position> getPositions() {
         return positions;
     }
 
-    public void setPositions(Set<Position> positions) {
+    public void setPositions(List<Position> positions) {
         this.positions = positions;
     }
 
