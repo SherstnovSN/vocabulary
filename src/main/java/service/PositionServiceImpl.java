@@ -1,6 +1,6 @@
 package service;
 
-import DAO.PositionDAO;
+import dao.PositionDAO;
 import domain.Position;
 import domain.Translation;
 import domain.Vocabulary;

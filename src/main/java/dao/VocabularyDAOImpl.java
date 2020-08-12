@@ -1,4 +1,4 @@
-package DAO;
+package dao;
 
 import domain.Vocabulary;
 import org.hibernate.Session;

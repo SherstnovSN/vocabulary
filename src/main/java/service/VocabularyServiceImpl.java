@@ -1,6 +1,6 @@
 package service;
 
-import DAO.VocabularyDAO;
+import dao.VocabularyDAO;
 import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
