@@ -23,16 +23,14 @@ public class PositionServiceImpl implements PositionService{
     private PositionDAO positionDAO;
 
     @Override
-    public boolean addPosition(String source, String[] translations, Vocabulary vocabulary) {
+    public void addPosition(String source, String[] translations, Vocabulary vocabulary) {
         if (validator.validate(source, vocabulary.getSourceRegex())) {
             Position position = new Position();
             position.setSource(source);
             position.setVocabulary(vocabulary);
             position.setTranslations(createTranslationsSet(position, translations));
             positionDAO.add(position);
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -46,29 +44,21 @@ public class PositionServiceImpl implements PositionService{
     }
 
     @Override
-    public Translation getTranslationById(int translationId) {
-        return positionDAO.getTranslationById(translationId);
-    }
-
-    @Override
-    public boolean addTranslation(String source, String[] translations) {
+    public void addTranslation(String source, String[] translations) {
         Position position = getFromAllVocabularies(source);
         addToTranslationsSet(position, translations);
-        return true;
     }
 
     @Override
-    public boolean deletePosition(String source) {
+    public void deletePosition(String source) {
         Position position = positionDAO.getFromAllVocabularies(source);
         positionDAO.delete(position);
-        return true;
     }
 
     @Override
-    public boolean deleteTranslation(int translationId) {
-        Translation translation = getTranslationById(translationId);
+    public void deleteTranslation(int translationId) {
+        Translation translation = positionDAO.getTranslationById(translationId);
         translation.getPosition().getTranslations().remove(translation);
-        return true;
     }
 
     public Set<Translation> createTranslationsSet(Position position, String[] translations) {

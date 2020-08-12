@@ -30,7 +30,7 @@ public class PositionDAOImpl implements PositionDAO {
     @Override
     public Position getFromVocabulary(String source, Vocabulary vocabulary) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("FROM Position P WHERE P.source = :source AND P.vocabulary = :vocabulary");
+        Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source AND P.vocabulary = :vocabulary");
         query.setParameter("source", source);
         query.setParameter("vocabulary", vocabulary);
         return (Position) query.uniqueResult();
@@ -40,12 +40,6 @@ public class PositionDAOImpl implements PositionDAO {
     public Translation getTranslationById(int translationId) {
         Session session = sessionFactory.getCurrentSession();
         return session.get(Translation.class, translationId);
-    }
-
-    @Override
-    public void edit(Position position) {
-        Session session = sessionFactory.getCurrentSession();
-        session.update(position);
     }
 
     @Override

@@ -14,8 +14,6 @@ public interface PositionDAO {
 
     Translation getTranslationById(int translationId);
 
-    void edit(Position position);
-
     void delete(Position position);
 
 }
