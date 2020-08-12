@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PositionDAOImpl implements PositionDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
     @Override
@@ -48,4 +47,8 @@ public class PositionDAOImpl implements PositionDAO {
         session.delete(position);
     }
 
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 }

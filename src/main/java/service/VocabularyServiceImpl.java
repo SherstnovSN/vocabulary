@@ -12,7 +12,6 @@ import java.util.List;
 @Transactional
 public class VocabularyServiceImpl implements VocabularyService {
 
-    @Autowired
     private VocabularyDAO vocabularyDAO;
 
     @Override
@@ -25,4 +24,8 @@ public class VocabularyServiceImpl implements VocabularyService {
         return vocabularyDAO.getById(id);
     }
 
+    @Autowired
+    public void setVocabularyDAO(VocabularyDAO vocabularyDAO) {
+        this.vocabularyDAO = vocabularyDAO;
+    }
 }

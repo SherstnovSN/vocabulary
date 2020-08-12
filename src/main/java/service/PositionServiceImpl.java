@@ -16,10 +16,8 @@ import java.util.Set;
 @Transactional
 public class PositionServiceImpl implements PositionService{
 
-    @Autowired
     private Validator validator;
 
-    @Autowired
     private PositionDAO positionDAO;
 
     @Override
@@ -85,4 +83,13 @@ public class PositionServiceImpl implements PositionService{
         }
     }
 
+    @Autowired
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
+
+    @Autowired
+    public void setPositionDAO(PositionDAO positionDAO) {
+        this.positionDAO = positionDAO;
+    }
 }

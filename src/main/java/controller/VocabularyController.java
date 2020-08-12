@@ -14,10 +14,8 @@ import java.util.List;
 @Controller
 public class VocabularyController {
 
-    @Autowired
     private VocabularyService vocabularyService;
 
-    @Autowired
     private PositionService positionService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -88,6 +86,16 @@ public class VocabularyController {
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteTranslation(@RequestParam(value = "id") String translationId) {
         positionService.deleteTranslation(Integer.parseInt(translationId));
+    }
+
+    @Autowired
+    public void setVocabularyService(VocabularyService vocabularyService) {
+        this.vocabularyService = vocabularyService;
+    }
+
+    @Autowired
+    public void setPositionService(PositionService positionService) {
+        this.positionService = positionService;
     }
 
 }

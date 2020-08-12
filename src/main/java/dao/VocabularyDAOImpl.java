@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public class VocabularyDAOImpl implements VocabularyDAO{
 
-    @Autowired
     private SessionFactory sessionFactory;
 
     @Override
@@ -27,4 +26,8 @@ public class VocabularyDAOImpl implements VocabularyDAO{
         return session.get(Vocabulary.class, id);
     }
 
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 }
