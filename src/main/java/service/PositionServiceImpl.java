@@ -62,25 +62,24 @@ public class PositionServiceImpl implements PositionService{
     public Set<Translation> createTranslationsSet(Position position, String[] translations) {
         Set<Translation> translationsSet = new HashSet<>();
         for (String translationWord : translations) {
-            if (validator.validate(translationWord, position.getVocabulary().getTranslationRegex())) {
-                Translation translation = new Translation();
-                translation.setWord(translationWord);
-                translation.setPosition(position);
-                translationsSet.add(translation);
-            }
+            if (validator.validate(translationWord, position.getVocabulary().getTranslationRegex()))
+                translationsSet.add(createAndFillTranslation(position, translationWord));
         }
         return translationsSet;
     }
 
     public void addToTranslationsSet(Position position, String[] translations) {
         for (String translationWord : translations) {
-            if (validator.validate(translationWord, position.getVocabulary().getTranslationRegex())) {
-                Translation translation = new Translation();
-                translation.setWord(translationWord);
-                translation.setPosition(position);
-                position.getTranslations().add(translation);
-            }
+            if (validator.validate(translationWord, position.getVocabulary().getTranslationRegex()))
+                position.getTranslations().add(createAndFillTranslation(position, translationWord));
         }
+    }
+
+    public Translation createAndFillTranslation(Position position, String translationWord) {
+        Translation translation = new Translation();
+        translation.setWord(translationWord);
+        translation.setPosition(position);
+        return translation;
     }
 
     @Autowired
