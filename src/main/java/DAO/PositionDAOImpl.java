@@ -1,14 +1,13 @@
 package DAO;
 
 import domain.Position;
+import domain.Translation;
 import domain.Vocabulary;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class PositionDAOImpl implements PositionDAO {
@@ -20,13 +19,6 @@ public class PositionDAOImpl implements PositionDAO {
     public void add(Position position) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(position);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Position> getAll() {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("FROM Position").list();
     }
 
     @Override
@@ -42,6 +34,12 @@ public class PositionDAOImpl implements PositionDAO {
         query.setParameter("source", source);
         query.setParameter("vocabulary", vocabulary);
         return (Position) query.uniqueResult();
+    }
+
+    @Override
+    public Translation getTranslationById(int translationId) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Translation.class, translationId);
     }
 
     @Override

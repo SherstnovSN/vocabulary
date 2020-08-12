@@ -15,7 +15,7 @@
         <div id="main">
             <div id="content">
                 <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
-                <a href="<c:url value="/add"/>">Добавить</a>
+                <a href="<c:url value="/addPosition"/>">Добавить</a>
                 <a href="<c:url value="/translate"/>">Перевести</a>
                 <br>
                 <c:forEach var="vocabulary" items="${vocabularies}">
@@ -26,8 +26,8 @@
                                     <c:set var="positionSource" value="${position.source}" />
                                         <li>
                                             <div class="${positionSource}">
-                                                ${positionSource} - ${position.translation}
-                                                <a href="<c:url value="/edit/${positionSource}"/>" title="Редактировать"><strong>_</strong></a>
+                                                ${positionSource} - <c:forEach var="translation" items="${position.translations}">${translation.word} </c:forEach>
+                                                <a href="<c:url value="/editPosition/${positionSource}"/>" title="Редактировать"><strong>_</strong></a>
                                                 <a title="Удалить" onclick="doAjax('${positionSource}')"><strong>x</strong></a>
                                             </div>
                                         </li>
@@ -50,7 +50,7 @@
                     function doAjax(positionSource) {
                         $.ajax({
                             type: 'GET',
-                            url: 'delete',
+                            url: 'deletePosition',
                             dataType: 'json',
                             data: ({
                                 source: positionSource

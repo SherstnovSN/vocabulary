@@ -6,13 +6,8 @@ import org.springframework.stereotype.Component;
 public class ValidatorImpl implements Validator {
 
     @Override
-    public boolean validate(String source, String sourceRegex) {
-        return source.matches(sourceRegex);
-    }
-
-    @Override
-    public boolean validate(String source, String sourceRegex, String translation, String translationRegex) {
-        return source.matches(sourceRegex) && translation.matches(translationRegex);
+    public boolean validate(String word, String regex) {
+        return word.matches(regex);
     }
 
 }

@@ -1,6 +1,8 @@
 package domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "position")
@@ -10,8 +12,8 @@ public class Position {
     @Column(name = "source")
     private String source;
 
-    @Column(name = "translation")
-    private String translation;
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "position")
+    private Set<Translation> translations = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "vocabulary_id", referencedColumnName = "id")
@@ -25,12 +27,12 @@ public class Position {
         this.source = source;
     }
 
-    public String getTranslation() {
-        return translation;
+    public Set<Translation> getTranslations() {
+        return translations;
     }
 
-    public void setTranslation(String translation) {
-        this.translation = translation;
+    public void setTranslations(Set<Translation> translations) {
+        this.translations = translations;
     }
 
     public Vocabulary getVocabulary() {

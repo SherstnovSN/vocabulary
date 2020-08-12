@@ -2,12 +2,10 @@ package controller;
 
 import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import service.PositionService;
 import service.VocabularyService;
 
@@ -29,19 +27,19 @@ public class VocabularyController {
         return "home";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/addPosition", method = RequestMethod.GET)
     public String addPositionToVocabularyPage(Model model) {
         List<Vocabulary> vocabularies = vocabularyService.getAll();
         model.addAttribute("vocabularies", vocabularies);
-        return "add";
+        return "addPosition";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/addPosition", method = RequestMethod.POST)
     public String addPositionToVocabulary(@RequestParam(value = "source") String source,
-                                          @RequestParam(value = "translation") String translation,
+                                          @RequestParam(value = "translations") String[] translations,
                                           @RequestParam(value = "vocabulary") int vocabularyId) {
         Vocabulary vocabulary = vocabularyService.getById(vocabularyId);
-        positionService.add(source, translation, vocabulary);
+        positionService.addPosition(source, translations, vocabulary);
         return "redirect:/";
     }
 
@@ -61,22 +59,35 @@ public class VocabularyController {
         return "translation";
     }
 
-    @RequestMapping(value = "/edit/{source}", method = RequestMethod.GET)
-    public String showEditPage(@PathVariable String source, Model model) {
+    @RequestMapping(value = "/editPosition/{source}", method = RequestMethod.GET)
+    public String showEditPositionPage(@PathVariable String source, Model model) {
         model.addAttribute("position", positionService.getFromAllVocabularies(source));
-        return "edit";
+        return "editPosition";
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String editPosition(@RequestParam(value = "source") String source,
-                               @RequestParam(value = "translation") String translation) {
-        positionService.edit(source, translation);
-        return "redirect:/";
+    @RequestMapping(value = "/addTranslation/{source}", method = RequestMethod.GET)
+    public String showAddTranslationPage(@PathVariable String source, Model model) {
+        model.addAttribute("position", positionService.getFromAllVocabularies(source));
+        return "addTranslation";
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    public void deletePositionPage(@RequestParam(value = "source") String source) {
-        positionService.delete(source);
+    @RequestMapping(value = "/addTranslation", method = RequestMethod.POST)
+    public String addTranslation(@RequestParam(value = "source") String source,
+                                 @RequestParam(value = "translations") String[] translations) {
+        positionService.addTranslation(source, translations);
+        return "redirect:/editPosition/" + source;
+    }
+
+    @RequestMapping(value = "/deletePosition", method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deletePosition(@RequestParam(value = "source") String source) {
+        positionService.deletePosition(source);
+    }
+
+    @RequestMapping(value = "/deleteTranslation", method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteTranslation(@RequestParam(value = "id") String translationId) {
+        positionService.deleteTranslation(Integer.parseInt(translationId));
     }
 
 }

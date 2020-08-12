@@ -1,22 +1,23 @@
 package service;
 
 import domain.Position;
+import domain.Translation;
 import domain.Vocabulary;
-
-import java.util.List;
 
 public interface PositionService {
 
-    boolean add(String source, String translation, Vocabulary vocabulary);
-
-    List<Position> getAll();
+    boolean addPosition(String source, String[] translations, Vocabulary vocabulary);
 
     Position getFromAllVocabularies(String source);
 
     Position getFromVocabulary(String source, Vocabulary vocabulary);
 
-    boolean edit(String source, String translation);
+    Translation getTranslationById(int translationId);
 
-    boolean delete(String source);
+    boolean addTranslation(String source, String[] translations);
+
+    boolean deletePosition(String source);
+
+    boolean deleteTranslation(int translationId);
 
 }

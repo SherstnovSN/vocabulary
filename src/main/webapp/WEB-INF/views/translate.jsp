@@ -14,26 +14,18 @@
         <div id="form">
             <c:url value="/translation" var="translate"/>
             <form action="${translate}" method="POST">
-                <table>
-                    <tr>
-                        <td><label for="vocabulary">Словарь</label></td>
-                        <td>
-                            <select id="vocabulary" name="vocabulary">
-                                <option value="0">Все словари</option>
-                                <c:forEach var="vocabulary" items="${vocabularies}">
-                                    <option value="${vocabulary.id}">${vocabulary.name}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="source">Слово</label></td>
-                        <td><input id="source" type="text" name="source" required autofocus></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><input type="submit" value="Перевести"></td>
-                    </tr>
-                </table>
+                <label for="vocabulary">Словарь</label>
+                <select id="vocabulary" name="vocabulary">
+                    <option value="0">Все словари</option>
+                        <c:forEach var="vocabulary" items="${vocabularies}">
+                            <option value="${vocabulary.id}">${vocabulary.name}</option>
+                        </c:forEach>
+                </select>
+                <br><br>
+                <label for="source">Слово</label>
+                <input id="source" type="text" name="source" required autofocus>
+                <br><br>
+                <input type="submit" value="Перевести">
             </form>
         </div>
     </div>

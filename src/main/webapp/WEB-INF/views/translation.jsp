@@ -11,13 +11,13 @@
     <div id="main">
         <div id="content">
             <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
-            <a href="<c:url value="/add"/>">Добавить</a>
+            <a href="<c:url value="/addPosition"/>">Добавить</a>
             <a href="<c:url value="/translate"/>">Перевести</a>
             <br><br>
-            <c:if test="${position.source != null}">
-                ${position.source} - ${position.translation}
+            <c:if test="${position != null}">
+                ${position.source} - <c:forEach var="translation" items="${position.translations}">${translation.word} </c:forEach>
             </c:if>
-            <c:if test="${position.source == null}">
+            <c:if test="${position == null}">
                 Слово отсутствует
             </c:if>
         </div>
