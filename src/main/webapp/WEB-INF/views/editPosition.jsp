@@ -22,7 +22,9 @@
                 <c:forEach var="translation" items="${position.translations}">
                     <div class="translation${translation.id}">
                         <strong>${translation.word}</strong>
-                        <a onclick="doAjax(${translation.id})" title="Удалить"><strong>x</strong></a>
+                        <a onclick="doAjax(${translation.id})" title="Удалить">
+                            <img src="<c:url value="/resources/img/delete.png"/>" width="13" height="13" alt="delete">
+                        </a>
                     </div>
                 </c:forEach>
                 <a href="<c:url value="/addTranslation/${position.id}"/>" title="Добавить"><strong>+</strong></a>

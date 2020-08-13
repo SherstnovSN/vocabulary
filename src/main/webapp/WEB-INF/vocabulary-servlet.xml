@@ -16,7 +16,7 @@
     <import resource="database.xml" />
 
     <context:component-scan base-package="controller, dao, service, validator, domain" />
-    <mvc:resources mapping="/resources/**" location="/resources/" />
+    <mvc:resources mapping="/resources/**" location="/resources/img" />
     <mvc:annotation-driven />
     <tx:annotation-driven />
 
