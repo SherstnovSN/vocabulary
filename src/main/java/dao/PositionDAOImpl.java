@@ -29,6 +29,7 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Position> getFromAllVocabulariesBySource(String source) {
         Session session = sessionFactory.getCurrentSession();
         Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source");
@@ -37,6 +38,7 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Position> getFromAllVocabulariesByTranslation(String translation) {
         Session session = sessionFactory.getCurrentSession();
         Query<?> query = session.createQuery("SELECT P FROM Position P JOIN Translation T ON P.id = T.position.id AND T.word = :translation");
@@ -45,6 +47,7 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Position> getFromVocabularyBySource(String source, Vocabulary vocabulary) {
         Session session = sessionFactory.getCurrentSession();
         Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source AND P.vocabulary = :vocabulary");
@@ -54,6 +57,7 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Position> getFromVocabularyByTranslation(String translation, Vocabulary vocabulary) {
         Session session = sessionFactory.getCurrentSession();
         Query<?> query = session.createQuery("SELECT P FROM Position P JOIN Translation T ON P.id = T.position.id AND T.word = :translation AND P.vocabulary = :vocabulary");
