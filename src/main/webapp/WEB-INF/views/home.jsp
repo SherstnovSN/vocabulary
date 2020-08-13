@@ -23,12 +23,14 @@
                         <ul>
                             <c:if test="${vocabulary.positions.size() != 0}">
                                 <c:forEach var="position" items="${vocabulary.positions}">
-                                    <c:set var="positionSource" value="${position.source}" />
                                         <li>
-                                            <div class="${positionSource}">
-                                                <strong>${positionSource}</strong> - <c:forEach var="translation" items="${position.translations}">${translation.word} </c:forEach>
-                                                <a href="<c:url value="/editPosition/${positionSource}"/>" title="Редактировать"><strong>_</strong></a>
-                                                <a title="Удалить" onclick="doAjax('${positionSource}')"><strong>x</strong></a>
+                                            <div class="position${position.id}">
+                                                <strong>${position.source}</strong> -
+                                                <c:forEach var="translation" items="${position.translations}">
+                                                    ${translation.word}
+                                                </c:forEach>
+                                                <a href="<c:url value="/editPosition/${position.id}"/>" title="Редактировать"><strong>_</strong></a>
+                                                <a onclick="doAjax('${position.id}')" title="Удалить"><strong>x</strong></a>
                                             </div>
                                         </li>
                                 </c:forEach>
@@ -47,16 +49,16 @@
                     });
                 </script>
                 <script type="text/javascript">
-                    function doAjax(positionSource) {
+                    function doAjax(positionId) {
                         $.ajax({
                             type: 'GET',
                             url: 'deletePosition',
                             dataType: 'json',
                             data: ({
-                                source: positionSource
+                                positionId: positionId
                             }),
                             success:
-                                $("." + positionSource).text('Удалено')
+                                $(".position" + positionId).text('Удалено')
                         });
                     }
                 </script>

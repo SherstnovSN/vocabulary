@@ -9,6 +9,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class PositionDAOImpl implements PositionDAO {
 
@@ -21,18 +23,43 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
-    public Position getFromAllVocabularies(String source) {
+    public Position getPositionById(int positionId) {
         Session session = sessionFactory.getCurrentSession();
-        return session.get(Position.class, source);
+        return session.get(Position.class, positionId);
     }
 
     @Override
-    public Position getFromVocabulary(String source, Vocabulary vocabulary) {
+    public List<Position> getFromAllVocabulariesBySource(String source) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source");
+        query.setParameter("source", source);
+        return (List<Position>) query.list();
+    }
+
+    @Override
+    public List<Position> getFromAllVocabulariesByTranslation(String translation) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<?> query = session.createQuery("SELECT P FROM Position P JOIN Translation T ON P.id = T.position.id AND T.word = :translation");
+        query.setParameter("translation", translation);
+        return (List<Position>) query.list();
+    }
+
+    @Override
+    public List<Position> getFromVocabularyBySource(String source, Vocabulary vocabulary) {
         Session session = sessionFactory.getCurrentSession();
         Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source AND P.vocabulary = :vocabulary");
         query.setParameter("source", source);
         query.setParameter("vocabulary", vocabulary);
-        return (Position) query.uniqueResult();
+        return (List<Position>) query.list();
+    }
+
+    @Override
+    public List<Position> getFromVocabularyByTranslation(String translation, Vocabulary vocabulary) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<?> query = session.createQuery("SELECT P FROM Position P JOIN Translation T ON P.id = T.position.id AND T.word = :translation AND P.vocabulary = :vocabulary");
+        query.setParameter("translation", translation);
+        query.setParameter("vocabulary", vocabulary);
+        return (List<Position>) query.list();
     }
 
     @Override

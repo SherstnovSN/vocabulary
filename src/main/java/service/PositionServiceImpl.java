@@ -10,6 +10,7 @@ import validator.Validator;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,33 +24,36 @@ public class PositionServiceImpl implements PositionService{
     @Override
     public void addPosition(String source, String[] translations, Vocabulary vocabulary) {
         if (validator.validate(source, vocabulary.getSourceRegex())) {
-            Position position = new Position();
-            position.setSource(source);
-            position.setVocabulary(vocabulary);
-            position.setTranslations(createTranslationsSet(position, translations));
-            positionDAO.add(position);
+            positionDAO.add(createAndFillPosition(source, translations, vocabulary));
         }
     }
 
     @Override
-    public Position getFromAllVocabularies(String source) {
-        return positionDAO.getFromAllVocabularies(source);
+    public Position getPositionById(int positionId) {
+        return positionDAO.getPositionById(positionId);
     }
 
     @Override
-    public Position getFromVocabulary(String source, Vocabulary vocabulary) {
-        return positionDAO.getFromVocabulary(source, vocabulary);
+    public List<Position> getFromAllVocabularies(String search, String source) {
+        if (search.equals("source")) return positionDAO.getFromAllVocabulariesBySource(source);
+        else return positionDAO.getFromAllVocabulariesByTranslation(source);
     }
 
     @Override
-    public void addTranslation(String source, String[] translations) {
-        Position position = getFromAllVocabularies(source);
+    public List<Position> getFromVocabulary(String search, String source, Vocabulary vocabulary) {
+        if (search.equals("source")) return positionDAO.getFromVocabularyBySource(source, vocabulary);
+        else return positionDAO.getFromVocabularyByTranslation(source, vocabulary);
+    }
+
+    @Override
+    public void addTranslation(int positionId, String[] translations) {
+        Position position = getPositionById(positionId);
         addToTranslationsSet(position, translations);
     }
 
     @Override
-    public void deletePosition(String source) {
-        Position position = positionDAO.getFromAllVocabularies(source);
+    public void deletePosition(int positionId) {
+        Position position = positionDAO.getPositionById(positionId);
         positionDAO.delete(position);
     }
 
@@ -80,6 +84,14 @@ public class PositionServiceImpl implements PositionService{
         translation.setWord(translationWord);
         translation.setPosition(position);
         return translation;
+    }
+
+    public Position createAndFillPosition(String source, String[] translations, Vocabulary vocabulary) {
+        Position position = new Position();
+        position.setSource(source);
+        position.setVocabulary(vocabulary);
+        position.setTranslations(createTranslationsSet(position, translations));
+        return position;
     }
 
     @Autowired

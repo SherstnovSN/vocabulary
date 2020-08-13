@@ -22,6 +22,10 @@
                         </c:forEach>
                 </select>
                 <br><br>
+                Поиск по
+                <input id="sourceSearch" name="search" type="radio" value="source" checked="checked"><label for="sourceSearch">слову</label>
+                <input id="translationSearch" name="search" type="radio" value="translation"><label for="translationSearch">переводу</label>
+                <br><br>
                 <label for="source">Слово</label>
                 <input id="source" type="text" name="source" required autofocus>
                 <br><br>

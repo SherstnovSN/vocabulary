@@ -17,9 +17,10 @@
             Словарь<br>
             <strong>${position.vocabulary.name}</strong>
             <br><br>
-            <label for="source">Слово</label>
-            <input id="source" type="hidden" name="source" value="${position.source}"><strong>${position.source}</strong>
+            Слово<br>
+            <strong>${position.source}</strong>
             <br><br>
+            <input type="hidden" name="positionId" value="${position.id}">
             <label for="translation">Перевод</label>
             <input id="translation" type="text" name="translations" required>
             <br><br>

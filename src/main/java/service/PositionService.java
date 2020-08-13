@@ -3,17 +3,21 @@ package service;
 import domain.Position;
 import domain.Vocabulary;
 
+import java.util.List;
+
 public interface PositionService {
 
     void addPosition(String source, String[] translations, Vocabulary vocabulary);
 
-    Position getFromAllVocabularies(String source);
+    Position getPositionById(int positionId);
 
-    Position getFromVocabulary(String source, Vocabulary vocabulary);
+    List<Position> getFromAllVocabularies(String search, String source);
 
-    void addTranslation(String source, String[] translations);
+    List<Position> getFromVocabulary(String search, String source, Vocabulary vocabulary);
 
-    void deletePosition(String source);
+    void addTranslation(int positionId, String[] translations);
+
+    void deletePosition(int positionId);
 
     void deleteTranslation(int translationId);
 

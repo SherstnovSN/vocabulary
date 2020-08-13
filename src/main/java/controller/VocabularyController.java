@@ -42,44 +42,45 @@ public class VocabularyController {
     }
 
     @RequestMapping(value = "/translate", method = RequestMethod.GET)
-    public String showTranslationPage(Model model) {
+    public String showTranslationSearchPage(Model model) {
         List<Vocabulary> vocabularies = vocabularyService.getAll();
         model.addAttribute("vocabularies", vocabularies);
         return "translate";
     }
 
     @RequestMapping(value = "/translation", method = RequestMethod.POST)
-    public String showTranslationPage(@RequestParam(value = "source") String source,
+    public String showTranslationPage(@RequestParam(value = "search") String search,
+                                      @RequestParam(value = "source") String source,
                                       @RequestParam(value = "vocabulary") int vocabularyId,
                                       Model model) {
-        if (vocabularyId == 0) model.addAttribute("position", positionService.getFromAllVocabularies(source));
-        else model.addAttribute("position", positionService.getFromVocabulary(source, vocabularyService.getById(vocabularyId)));
+        if (vocabularyId == 0) model.addAttribute("positions", positionService.getFromAllVocabularies(search, source));
+        else model.addAttribute("positions", positionService.getFromVocabulary(search, source, vocabularyService.getById(vocabularyId)));
         return "translation";
     }
 
-    @RequestMapping(value = "/editPosition/{source}", method = RequestMethod.GET)
-    public String showEditPositionPage(@PathVariable String source, Model model) {
-        model.addAttribute("position", positionService.getFromAllVocabularies(source));
+    @RequestMapping(value = "/editPosition/{positionId}", method = RequestMethod.GET)
+    public String showEditPositionPage(@PathVariable String positionId, Model model) {
+        model.addAttribute("position", positionService.getPositionById(Integer.parseInt(positionId)));
         return "editPosition";
     }
 
-    @RequestMapping(value = "/addTranslation/{source}", method = RequestMethod.GET)
-    public String showAddTranslationPage(@PathVariable String source, Model model) {
-        model.addAttribute("position", positionService.getFromAllVocabularies(source));
+    @RequestMapping(value = "/addTranslation/{positionId}", method = RequestMethod.GET)
+    public String showAddTranslationPage(@PathVariable String positionId, Model model) {
+        model.addAttribute("position", positionService.getPositionById(Integer.parseInt(positionId)));
         return "addTranslation";
     }
 
     @RequestMapping(value = "/addTranslation", method = RequestMethod.POST)
-    public String addTranslation(@RequestParam(value = "source") String source,
+    public String addTranslation(@RequestParam(value = "positionId") int positionId,
                                  @RequestParam(value = "translations") String[] translations) {
-        positionService.addTranslation(source, translations);
-        return "redirect:/editPosition/" + source;
+        positionService.addTranslation(positionId, translations);
+        return "redirect:/editPosition/" + positionId;
     }
 
     @RequestMapping(value = "/deletePosition", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deletePosition(@RequestParam(value = "source") String source) {
-        positionService.deletePosition(source);
+    public void deletePosition(@RequestParam(value = "positionId") String positionId) {
+        positionService.deletePosition(Integer.parseInt(positionId));
     }
 
     @RequestMapping(value = "/deleteTranslation", method = RequestMethod.GET)

@@ -15,7 +15,7 @@ public class Translation {
     private String word;
 
     @ManyToOne
-    @JoinColumn(name = "position_source", referencedColumnName = "source")
+    @JoinColumn(name = "position_id", referencedColumnName = "id")
     private Position position;
 
     public int getId() {

@@ -25,7 +25,7 @@
                         <a onclick="doAjax(${translation.id})" title="Удалить"><strong>x</strong></a>
                     </div>
                 </c:forEach>
-                <a href="<c:url value="/addTranslation/${position.source}"/>" title="Добавить"><strong>+</strong></a>
+                <a href="<c:url value="/addTranslation/${position.id}"/>" title="Добавить"><strong>+</strong></a>
                 <script type="text/javascript">
                     function doAjax(translationId) {
                         $.ajax({

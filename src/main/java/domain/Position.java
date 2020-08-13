@@ -9,6 +9,10 @@ import java.util.Set;
 public class Position {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
     @Column(name = "source")
     private String source;
 
@@ -18,6 +22,10 @@ public class Position {
     @ManyToOne
     @JoinColumn(name = "vocabulary_id", referencedColumnName = "id")
     private Vocabulary vocabulary;
+
+    public int getId() {
+        return id;
+    }
 
     public String getSource() {
         return source;
@@ -42,4 +50,5 @@ public class Position {
     public void setVocabulary(Vocabulary vocabulary) {
         this.vocabulary = vocabulary;
     }
+
 }

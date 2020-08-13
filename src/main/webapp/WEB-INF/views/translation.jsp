@@ -14,10 +14,17 @@
             <a href="<c:url value="/addPosition"/>">Добавить</a>
             <a href="<c:url value="/translate"/>">Перевести</a>
             <br><br>
-            <c:if test="${position != null}">
-                ${position.source} - <c:forEach var="translation" items="${position.translations}">${translation.word} </c:forEach>
+            <c:if test="${positions.size() != 0}">
+                <c:forEach var="position" items="${positions}">
+                    <strong>${position.source}</strong> -
+                    <c:forEach var="translation" items="${position.translations}">
+                        ${translation.word}
+                    </c:forEach>
+                    (${position.vocabulary.name})
+                    <br>
+                </c:forEach>
             </c:if>
-            <c:if test="${position == null}">
+            <c:if test="${positions.size() == 0}">
                 Слово отсутствует
             </c:if>
         </div>
