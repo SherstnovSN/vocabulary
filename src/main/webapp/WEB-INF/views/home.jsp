@@ -53,7 +53,6 @@
                         $.ajax({
                             type: 'GET',
                             url: 'deletePosition',
-                            dataType: 'json',
                             data: ({
                                 positionId: positionId
                             }),

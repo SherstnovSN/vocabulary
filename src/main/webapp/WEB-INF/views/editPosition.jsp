@@ -31,7 +31,6 @@
                         $.ajax({
                             type: 'GET',
                             url: '/vocabulary/deleteTranslation',
-                            dataType: 'json',
                             data: ({
                                 id: translationId
                             }),
