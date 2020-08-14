@@ -1,11 +1,13 @@
 package service;
 
 import dao.VocabularyDAO;
+import domain.Position;
 import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -16,7 +18,10 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     @Override
     public List<Vocabulary> getAll() {
-        return vocabularyDAO.getAll();
+        List<Vocabulary> vocabularyList = vocabularyDAO.getAll();
+        for (Vocabulary vocabulary : vocabularyList)
+            vocabulary.getPositions().sort(Comparator.comparing(Position::getSource));
+        return vocabularyList;
     }
 
     @Override
