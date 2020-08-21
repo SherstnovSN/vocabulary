@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "vocabulary")
-public class Vocabulary {
+@Table(name = "language")
+public class Language {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +16,10 @@ public class Vocabulary {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "source_regex")
-    private String sourceRegex;
+    @Column(name = "regex")
+    private String regex;
 
-    @Column(name = "translation_regex")
-    private String translationRegex;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "vocabulary")
+    @OneToMany(mappedBy = "language")
     private List<Position> positions = new ArrayList<>();
 
     public int getId() {
@@ -37,20 +34,12 @@ public class Vocabulary {
         this.name = name;
     }
 
-    public String getSourceRegex() {
-        return sourceRegex;
+    public String getRegex() {
+        return regex;
     }
 
-    public void setSourceRegex(String sourceRegex) {
-        this.sourceRegex = sourceRegex;
-    }
-
-    public String getTranslationRegex() {
-        return translationRegex;
-    }
-
-    public void setTranslationRegex(String translationRegex) {
-        this.translationRegex = translationRegex;
+    public void setRegex(String regex) {
+        this.regex = regex;
     }
 
     public List<Position> getPositions() {
@@ -60,5 +49,4 @@ public class Vocabulary {
     public void setPositions(List<Position> positions) {
         this.positions = positions;
     }
-
 }

@@ -1,15 +1,13 @@
 package dao;
 
+import domain.Language;
 import domain.Position;
 import domain.Translation;
-import domain.Vocabulary;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class PositionDAOImpl implements PositionDAO {
@@ -17,7 +15,7 @@ public class PositionDAOImpl implements PositionDAO {
     private SessionFactory sessionFactory;
 
     @Override
-    public void add(Position position) {
+    public void addPosition(Position position) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(position);
     }
@@ -29,41 +27,12 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<Position> getFromAllVocabulariesBySource(String source) {
+    public Position getPositionBySourceAndLanguage(String source, Language sourceLanguage) {
         Session session = sessionFactory.getCurrentSession();
-        Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source");
+        Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source AND P.language = :sourceLanguage");
         query.setParameter("source", source);
-        return (List<Position>) query.list();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Position> getFromAllVocabulariesByTranslation(String translation) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<?> query = session.createQuery("SELECT P FROM Position P JOIN Translation T ON P.id = T.position.id AND T.word = :translation");
-        query.setParameter("translation", translation);
-        return (List<Position>) query.list();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Position> getFromVocabularyBySource(String source, Vocabulary vocabulary) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<?> query = session.createQuery("FROM Position P WHERE P.source = :source AND P.vocabulary = :vocabulary");
-        query.setParameter("source", source);
-        query.setParameter("vocabulary", vocabulary);
-        return (List<Position>) query.list();
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Position> getFromVocabularyByTranslation(String translation, Vocabulary vocabulary) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<?> query = session.createQuery("SELECT P FROM Position P JOIN Translation T ON P.id = T.position.id AND T.word = :translation AND P.vocabulary = :vocabulary");
-        query.setParameter("translation", translation);
-        query.setParameter("vocabulary", vocabulary);
-        return (List<Position>) query.list();
+        query.setParameter("sourceLanguage", sourceLanguage);
+        return (Position) query.uniqueResult();
     }
 
     @Override
@@ -73,9 +42,26 @@ public class PositionDAOImpl implements PositionDAO {
     }
 
     @Override
-    public void delete(Position position) {
+    public Translation getTranslationByWordAndLanguage(String word, Language translationLanguage) {
         Session session = sessionFactory.getCurrentSession();
+        Query<?> query = session.createQuery("FROM Translation T WHERE T.word = :word AND T.language = :translationLanguage");
+        query.setParameter("word", word);
+        query.setParameter("translationLanguage", translationLanguage);
+        return (Translation) query.uniqueResult();
+    }
+
+    @Override
+    public void deletePosition(Position position) {
+        Session session = sessionFactory.getCurrentSession();
+//        Query<?> positionQuery = session.createQuery("DELETE FROM Position P WHERE P.id = :positionId");
+//        positionQuery.setParameter("positionId", position.getId());
         session.delete(position);
+    }
+
+    @Override
+    public void deleteTranslation(Translation translation) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(translation);
     }
 
     @Autowired

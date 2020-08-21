@@ -1,8 +1,10 @@
 package domain;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "position")
@@ -16,12 +18,16 @@ public class Position {
     @Column(name = "source")
     private String source;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "position")
-    private Set<Translation> translations = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JoinTable(name = "position_translation",
+               joinColumns = @JoinColumn(name = "position_id"),
+               inverseJoinColumns = @JoinColumn(name = "translation_id"))
+    private List<Translation> translations = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "vocabulary_id", referencedColumnName = "id")
-    private Vocabulary vocabulary;
+    @JoinColumn(name = "language_id", referencedColumnName = "id")
+    private Language language;
 
     public int getId() {
         return id;
@@ -35,20 +41,19 @@ public class Position {
         this.source = source;
     }
 
-    public Set<Translation> getTranslations() {
+    public List<Translation> getTranslations() {
         return translations;
     }
 
-    public void setTranslations(Set<Translation> translations) {
+    public void setTranslations(List<Translation> translations) {
         this.translations = translations;
     }
 
-    public Vocabulary getVocabulary() {
-        return vocabulary;
+    public Language getLanguage() {
+        return language;
     }
 
-    public void setVocabulary(Vocabulary vocabulary) {
-        this.vocabulary = vocabulary;
+    public void setLanguage(Language language) {
+        this.language = language;
     }
-
 }

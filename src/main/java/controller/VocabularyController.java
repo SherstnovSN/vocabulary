@@ -1,79 +1,84 @@
 package controller;
 
-import domain.Vocabulary;
+import domain.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import service.LanguageService;
 import service.PositionService;
-import service.VocabularyService;
 
 import java.util.List;
 
 @Controller
 public class VocabularyController {
 
-    private VocabularyService vocabularyService;
+    private LanguageService languageService;
 
     private PositionService positionService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String homePage(Model model) {
-        List<Vocabulary> vocabularies = vocabularyService.getAll();
-        model.addAttribute("vocabularies", vocabularies);
-        return "home";
+    public String showTranslationSearchPage(Model model) {
+        List<Language> languages = languageService.getAll();
+        model.addAttribute("languages", languages);
+        return "translate";
+    }
+
+    @RequestMapping(value = "/translation", method = RequestMethod.POST)
+    public String showTranslationPage(@RequestParam(value = "source") String source,
+                                      @RequestParam(value = "sourceLanguageId") int sourceLanguageId,
+                                      @RequestParam(value = "translationLanguageId") int translationLanguageId,
+                                      Model model) {
+        model.addAttribute("source", source);
+        model.addAttribute("translations", positionService.getTranslations(source, languageService.getById(sourceLanguageId), languageService.getById(translationLanguageId)));
+        return "translation";
+    }
+
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public String showAdminPage(Model model) {
+        List<Language> languages = languageService.getAll();
+        model.addAttribute("languages", languages);
+        return "admin";
     }
 
     @RequestMapping(value = "/addPosition", method = RequestMethod.GET)
     public String addPositionToVocabularyPage(Model model) {
-        List<Vocabulary> vocabularies = vocabularyService.getAll();
-        model.addAttribute("vocabularies", vocabularies);
+        List<Language> languages = languageService.getAll();
+        model.addAttribute("languages", languages);
         return "addPosition";
     }
 
     @RequestMapping(value = "/addPosition", method = RequestMethod.POST)
     public String addPositionToVocabulary(@RequestParam(value = "source") String source,
                                           @RequestParam(value = "translations") String[] translations,
-                                          @RequestParam(value = "vocabulary") int vocabularyId) {
-        Vocabulary vocabulary = vocabularyService.getById(vocabularyId);
-        positionService.addPosition(source, translations, vocabulary);
-        return "redirect:/";
-    }
-
-    @RequestMapping(value = "/translate", method = RequestMethod.GET)
-    public String showTranslationSearchPage(Model model) {
-        List<Vocabulary> vocabularies = vocabularyService.getAll();
-        model.addAttribute("vocabularies", vocabularies);
-        return "translate";
-    }
-
-    @RequestMapping(value = "/translation", method = RequestMethod.POST)
-    public String showTranslationPage(@RequestParam(value = "search") String search,
-                                      @RequestParam(value = "source") String source,
-                                      @RequestParam(value = "vocabulary") int vocabularyId,
-                                      Model model) {
-        if (vocabularyId == 0) model.addAttribute("positions", positionService.getFromAllVocabularies(search, source));
-        else model.addAttribute("positions", positionService.getFromVocabulary(search, source, vocabularyService.getById(vocabularyId)));
-        return "translation";
+                                          @RequestParam(value = "sourceLanguageId") int sourceLanguageId,
+                                          @RequestParam(value = "translationLanguageId") int translationLanguageId) {
+        Language sourceLanguage = languageService.getById(sourceLanguageId);
+        Language translationLanguage = languageService.getById(translationLanguageId);
+        positionService.addPosition(source, translations, sourceLanguage, translationLanguage);
+        return "redirect:/admin";
     }
 
     @RequestMapping(value = "/editPosition/{positionId}", method = RequestMethod.GET)
-    public String showEditPositionPage(@PathVariable String positionId, Model model) {
-        model.addAttribute("position", positionService.getPositionById(Integer.parseInt(positionId)));
+    public String showEditPositionPage(@PathVariable int positionId, Model model) {
+        model.addAttribute("position", positionService.getPositionById(positionId));
         return "editPosition";
     }
 
     @RequestMapping(value = "/addTranslation/{positionId}", method = RequestMethod.GET)
-    public String showAddTranslationPage(@PathVariable String positionId, Model model) {
-        model.addAttribute("position", positionService.getPositionById(Integer.parseInt(positionId)));
+    public String showAddTranslationPage(@PathVariable int positionId, Model model) {
+        model.addAttribute("position", positionService.getPositionById(positionId));
+        model.addAttribute("languages", languageService.getAll());
         return "addTranslation";
     }
 
     @RequestMapping(value = "/addTranslation", method = RequestMethod.POST)
     public String addTranslation(@RequestParam(value = "positionId") int positionId,
-                                 @RequestParam(value = "translations") String[] translations) {
-        positionService.addTranslation(positionId, translations);
+                                 @RequestParam(value = "translations") String[] translations,
+                                 @RequestParam(value = "translationLanguageId") int translationLanguageId) {
+        Language translationLanguage = languageService.getById(translationLanguageId);
+        positionService.addTranslation(positionId, translations, translationLanguage);
         return "redirect:/editPosition/" + positionId;
     }
 
@@ -85,13 +90,14 @@ public class VocabularyController {
 
     @RequestMapping(value = "/deleteTranslation", method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteTranslation(@RequestParam(value = "id") String translationId) {
-        positionService.deleteTranslation(Integer.parseInt(translationId));
+    public void deleteTranslation(@RequestParam(value = "positionId") String positionId,
+                                  @RequestParam(value = "translationId") String translationId) {
+        positionService.deleteTranslation(Integer.parseInt(positionId), Integer.parseInt(translationId));
     }
 
     @Autowired
-    public void setVocabularyService(VocabularyService vocabularyService) {
-        this.vocabularyService = vocabularyService;
+    public void setLanguageService(LanguageService languageService) {
+        this.languageService = languageService;
     }
 
     @Autowired

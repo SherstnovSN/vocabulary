@@ -14,20 +14,21 @@
     <body>
         <div id="main">
             <div id="content">
-                <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
-                <a href="<c:url value="/addPosition"/>">Добавить</a>
-                <a href="<c:url value="/translate"/>">Перевести</a>
                 <br>
-                <c:forEach var="vocabulary" items="${vocabularies}">
-                    <h4><span>${vocabulary.name}</span></h4>
+                <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
+                <br><br>
+                <a href="<c:url value="/addPosition"/>">Добавить</a>
+                <br>
+                <c:forEach var="language" items="${languages}">
+                    <h4><span>${language.name}</span></h4>
                         <ul>
-                            <c:if test="${vocabulary.positions.size() != 0}">
-                                <c:forEach var="position" items="${vocabulary.positions}">
+                            <c:if test="${language.positions.size() != 0}">
+                                <c:forEach var="position" items="${language.positions}">
                                         <li>
                                             <div class="position${position.id}">
                                                 <strong>${position.source}</strong> -
                                                 <c:forEach var="translation" items="${position.translations}">
-                                                    ${translation.word}
+                                                    ${translation.word} (${translation.language.name})
                                                 </c:forEach>
                                                 <a href="<c:url value="/editPosition/${position.id}"/>" title="Редактировать">
                                                     <img src="<c:url value="/resources/img/edit.png"/>" width="13" height="13" alt="edit">
@@ -39,7 +40,7 @@
                                         </li>
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${vocabulary.positions.size() == 0}">
+                            <c:if test="${language.positions.size() == 0}">
                                 Словарь пуст
                             </c:if>
                         </ul>

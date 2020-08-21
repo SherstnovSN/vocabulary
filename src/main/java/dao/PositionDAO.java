@@ -1,27 +1,23 @@
 package dao;
 
+import domain.Language;
 import domain.Position;
 import domain.Translation;
-import domain.Vocabulary;
-
-import java.util.List;
 
 public interface PositionDAO {
 
-    void add(Position position);
+    void addPosition(Position position);
 
     Position getPositionById(int positionId);
 
-    List<Position> getFromAllVocabulariesBySource(String source);
-
-    List<Position> getFromAllVocabulariesByTranslation(String translation);
-
-    List<Position> getFromVocabularyBySource(String source, Vocabulary vocabulary);
-
-    List<Position> getFromVocabularyByTranslation(String source, Vocabulary vocabulary);
+    Position getPositionBySourceAndLanguage(String source, Language sourceLanguage);
 
     Translation getTranslationById(int translationId);
 
-    void delete(Position position);
+    Translation getTranslationByWordAndLanguage(String word, Language translationLanguage);
+
+    void deletePosition(Position position);
+
+    void deleteTranslation(Translation translation);
 
 }

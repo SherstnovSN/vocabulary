@@ -10,21 +10,27 @@
 <body>
 <div id="main">
     <div id="content">
+        <br>
         <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
+        <a href="<c:url value="/admin"/>" title="Управление словарем">
+            <img src="<c:url value="/resources/img/admin.png"/>" width="17" height="17" alt="admin">
+        </a>
+        <br><br>
         <div id="form">
             <c:url value="/translation" var="translate"/>
             <form action="${translate}" method="POST">
-                <label for="vocabulary">Словарь</label>
-                <select id="vocabulary" name="vocabulary">
-                    <option value="0">Все словари</option>
-                        <c:forEach var="vocabulary" items="${vocabularies}">
-                            <option value="${vocabulary.id}">${vocabulary.name}</option>
-                        </c:forEach>
+                <label for="sourceLanguage">Перевести с</label>
+                <select id="sourceLanguage" name="sourceLanguageId">
+                    <c:forEach var="language" items="${languages}">
+                        <option value="${language.id}">${language.name}</option>
+                    </c:forEach>
                 </select>
-                <br><br>
-                Поиск по
-                <input id="sourceSearch" name="search" type="radio" value="source" checked="checked"><label for="sourceSearch">слову</label>
-                <input id="translationSearch" name="search" type="radio" value="translation"><label for="translationSearch">переводу</label>
+                <label for="translationLanguage">на</label>
+                <select id="translationLanguage" name="translationLanguageId">
+                    <c:forEach var="language" items="${languages}">
+                        <option value="${language.id}">${language.name}</option>
+                    </c:forEach>
+                </select>
                 <br><br>
                 <label for="source">Слово</label>
                 <input id="source" type="text" name="source" required autofocus>

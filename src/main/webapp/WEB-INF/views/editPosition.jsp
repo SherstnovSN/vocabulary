@@ -11,30 +11,37 @@
     <body>
         <div id="main">
             <div id="content">
+                <br>
                 <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
+                <a href="<c:url value="/admin"/>" title="Управление словарем">
+                    <img src="<c:url value="/resources/img/admin.png"/>" width="17" height="17" alt="admin">
+                </a>
+                <br><br>
                 Словарь<br>
-                <strong>${position.vocabulary.name}</strong>
+                <strong>${position.language.name}</strong>
                 <br><br>
                 Слово<br>
                 <strong>${position.source}</strong>
                 <br><br>
                 Перевод
+                <br>
                 <c:forEach var="translation" items="${position.translations}">
                     <div class="translation${translation.id}">
                         <strong>${translation.word}</strong>
-                        <a onclick="doAjax(${translation.id})" title="Удалить">
+                        <a onclick="doAjax(${position.id}, ${translation.id})" title="Удалить">
                             <img src="<c:url value="/resources/img/delete.png"/>" width="13" height="13" alt="delete">
                         </a>
                     </div>
                 </c:forEach>
                 <a href="<c:url value="/addTranslation/${position.id}"/>" title="Добавить"><strong>+</strong></a>
                 <script type="text/javascript">
-                    function doAjax(translationId) {
+                    function doAjax(positionId, translationId) {
                         $.ajax({
                             type: 'GET',
                             url: '/vocabulary/deleteTranslation',
                             data: ({
-                                id: translationId
+                                positionId: positionId,
+                                translationId: translationId
                             }),
                             success:
                                 $(".translation" + translationId).text('Удалено')

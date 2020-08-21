@@ -11,18 +11,30 @@
     <body>
         <div id="main">
             <div id="content">
+                <br>
                 <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
+                <a href="<c:url value="/admin"/>" title="Управление словарем">
+                    <img src="<c:url value="/resources/img/admin.png"/>" width="17" height="17" alt="admin">
+                </a>
+                <br><br>
                 <c:url value="/addPosition" var="addPosition"/>
                 <form action="${addPosition}" method="POST">
-                    <label for="vocabulary">Словарь</label>
-                    <select id="vocabulary" name="vocabulary">
-                        <c:forEach var="vocabulary" items="${vocabularies}">
-                            <option value="${vocabulary.id}">${vocabulary.name}</option>
+                    <label for="sourceLanguage">Язык</label>
+                    <select id="sourceLanguage" name="sourceLanguageId">
+                        <c:forEach var="language" items="${languages}">
+                            <option value="${language.id}">${language.name}</option>
                         </c:forEach>
                     </select>
                     <br><br>
                     <label for="source">Слово</label>
                     <input id="source" type="text" name="source" required autofocus>
+                    <br><br>
+                    <label for="translationLanguage">Язык</label>
+                    <select id="translationLanguage" name="translationLanguageId">
+                        <c:forEach var="language" items="${languages}">
+                            <option value="${language.id}">${language.name}</option>
+                        </c:forEach>
+                    </select>
                     <br><br>
                     <label for="translation">Перевод</label>
                     <input id="translation" type="text" name="translations" required>

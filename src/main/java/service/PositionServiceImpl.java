@@ -1,17 +1,16 @@
 package service;
 
 import dao.PositionDAO;
+import domain.Language;
 import domain.Position;
 import domain.Translation;
-import domain.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import validator.Validator;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -22,9 +21,15 @@ public class PositionServiceImpl implements PositionService{
     private PositionDAO positionDAO;
 
     @Override
-    public void addPosition(String source, String[] translations, Vocabulary vocabulary) {
-        if (validator.validate(source, vocabulary.getSourceRegex())) {
-            positionDAO.add(createAndFillPosition(source, translations, vocabulary));
+    public void addPosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) {
+        if (validator.validate(source, sourceLanguage.getRegex())) {
+            Position position = positionDAO.getPositionBySourceAndLanguage(source, sourceLanguage);
+            if (position == null) {
+                position = createAndFillPosition(source, translations, sourceLanguage, translationLanguage);
+                positionDAO.addPosition(position);
+                List<Position> reversedPositionsList = reversePosition(source, translations, sourceLanguage, translationLanguage);
+                addPositionsAfterReverse(reversedPositionsList);
+            }
         }
     }
 
@@ -34,64 +39,107 @@ public class PositionServiceImpl implements PositionService{
     }
 
     @Override
-    public List<Position> getFromAllVocabularies(String search, String source) {
-        if (search.equals("source")) return positionDAO.getFromAllVocabulariesBySource(source);
-        else return positionDAO.getFromAllVocabulariesByTranslation(source);
+    public List<Translation> getTranslations(String source, Language sourceLanguage, Language translationLanguage) {
+        List<Translation> translationsMatchedToLanguage = new ArrayList<>();
+        Position position = positionDAO.getPositionBySourceAndLanguage(source, sourceLanguage);
+        if (position != null) {
+            List<Translation> translations = position.getTranslations();
+            for (Translation translation : translations) {
+                if (translation.getLanguage().getId() == translationLanguage.getId())
+                    translationsMatchedToLanguage.add(translation);
+            }
+        }
+        return translationsMatchedToLanguage;
     }
 
     @Override
-    public List<Position> getFromVocabulary(String search, String source, Vocabulary vocabulary) {
-        if (search.equals("source")) return positionDAO.getFromVocabularyBySource(source, vocabulary);
-        else return positionDAO.getFromVocabularyByTranslation(source, vocabulary);
-    }
-
-    @Override
-    public void addTranslation(int positionId, String[] translations) {
+    public void addTranslation(int positionId, String[] translations, Language translationLanguage) {
         Position position = getPositionById(positionId);
-        addToTranslationsSet(position, translations);
+        addToTranslationsList(position, translations, translationLanguage);
+        List<Position> reversedPositionsList = reversePosition(position.getSource(), translations, position.getLanguage(), translationLanguage);
+        addPositionsAfterReverse(reversedPositionsList);
     }
 
     @Override
     public void deletePosition(int positionId) {
         Position position = positionDAO.getPositionById(positionId);
-        positionDAO.delete(position);
+        for (Translation translation : position.getTranslations()) {
+            if (translation.getPositions().size() == 1) positionDAO.deleteTranslation(translation);
+        }
+        positionDAO.deletePosition(position);
     }
 
     @Override
-    public void deleteTranslation(int translationId) {
+    public void deleteTranslation(int positionId, int translationId) {
+        Position position = positionDAO.getPositionById(positionId);
         Translation translation = positionDAO.getTranslationById(translationId);
-        translation.getPosition().getTranslations().remove(translation);
+        if (translation.getPositions().size() == 1) positionDAO.deleteTranslation(translation);
+        position.getTranslations().remove(translation);
     }
 
-    public Set<Translation> createTranslationsSet(Position position, String[] translations) {
-        Set<Translation> translationsSet = new HashSet<>();
+    public List<Translation> createTranslationsList(Position position, String[] translations, Language translationLanguage) {
+        List<Translation> translationsList = new ArrayList<>();
         for (String translationWord : translations) {
-            if (validator.validate(translationWord, position.getVocabulary().getTranslationRegex()))
-                translationsSet.add(createAndFillTranslation(position, translationWord));
+            if (validator.validate(translationWord, translationLanguage.getRegex())) {
+                Translation translation = positionDAO.getTranslationByWordAndLanguage(translationWord, translationLanguage);
+                if (translation == null) translation = createAndFillTranslation(position, translationWord, translationLanguage);
+                translationsList.add(translation);
+            }
         }
-        return translationsSet;
+        return translationsList;
     }
 
-    public void addToTranslationsSet(Position position, String[] translations) {
+    public void addToTranslationsList(Position position, String[] translations, Language translationLanguage) {
         for (String translationWord : translations) {
-            if (validator.validate(translationWord, position.getVocabulary().getTranslationRegex()))
-                position.getTranslations().add(createAndFillTranslation(position, translationWord));
+            if (validator.validate(translationWord, translationLanguage.getRegex())) {
+                Translation translation = positionDAO.getTranslationByWordAndLanguage(translationWord, translationLanguage);
+                if (translation == null) translation = createAndFillTranslation(position, translationWord, translationLanguage);
+                position.getTranslations().add(translation);
+            }
         }
     }
 
-    public Translation createAndFillTranslation(Position position, String translationWord) {
+    public Translation createAndFillTranslation(Position position, String translationWord, Language translationLanguage) {
         Translation translation = new Translation();
         translation.setWord(translationWord);
-        translation.setPosition(position);
+        List<Position> positionsSet = new ArrayList<>();
+        positionsSet.add(position);
+        translation.setPositions(positionsSet);
+        translation.setLanguage(translationLanguage);
         return translation;
     }
 
-    public Position createAndFillPosition(String source, String[] translations, Vocabulary vocabulary) {
+    public Position createAndFillPosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) {
         Position position = new Position();
         position.setSource(source);
-        position.setVocabulary(vocabulary);
-        position.setTranslations(createTranslationsSet(position, translations));
+        position.setLanguage(sourceLanguage);
+        position.setTranslations(createTranslationsList(position, translations, translationLanguage));
         return position;
+    }
+
+    public List<Position> reversePosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) {
+        List<Position> positionsList = new ArrayList<>();
+        String[] sources = new String[]{source};
+        for (String translationWord : translations) {
+            Position position = positionDAO.getPositionBySourceAndLanguage(translationWord, translationLanguage);
+            if (position == null) positionsList = fillReversedPositionsList(translationWord, sources, translationLanguage, sourceLanguage, positionsList);
+            else addToTranslationsList(position, sources, sourceLanguage);
+        }
+        return positionsList;
+    }
+
+    public List<Position> fillReversedPositionsList(String source, String[] translations, Language sourceLanguage, Language translationLanguage, List<Position> positionsList) {
+        Position position = createAndFillPosition(source, translations, sourceLanguage, translationLanguage);
+        positionsList.add(position);
+        return positionsList;
+    }
+
+    public void addPositionsAfterReverse(List<Position> positionsList) {
+        for (Position position : positionsList) {
+            Position checkPosition = positionDAO.getPositionBySourceAndLanguage(position.getSource(), position.getLanguage());
+            if (checkPosition == null) positionDAO.addPosition(position);
+            else checkPosition.getTranslations().add(position.getTranslations().get(0));
+        }
     }
 
     @Autowired

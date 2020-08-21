@@ -1,6 +1,7 @@
 package domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "translation")
@@ -14,9 +15,12 @@ public class Translation {
     @Column(name = "word")
     private String word;
 
+    @ManyToMany(mappedBy = "translations")
+    private List<Position> positions;
+
     @ManyToOne
-    @JoinColumn(name = "position_id", referencedColumnName = "id")
-    private Position position;
+    @JoinColumn(name = "language_id", referencedColumnName = "id")
+    private Language language;
 
     public int getId() {
         return id;
@@ -30,11 +34,19 @@ public class Translation {
         this.word = word;
     }
 
-    public Position getPosition() {
-        return position;
+    public List<Position> getPositions() {
+        return positions;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 }

@@ -10,22 +10,21 @@
     <body>
     <div id="main">
         <div id="content">
+            <br>
             <a href="<c:url value="/"/>"><h2>Словарь</h2></a>
-            <a href="<c:url value="/addPosition"/>">Добавить</a>
-            <a href="<c:url value="/translate"/>">Перевести</a>
+            <a href="<c:url value="/admin"/>" title="Управление словарем">
+                <img src="<c:url value="/resources/img/admin.png"/>" width="17" height="17" alt="admin">
+            </a>
             <br><br>
-            <c:if test="${positions.size() != 0}">
-                <c:forEach var="position" items="${positions}">
-                    <strong>${position.source}</strong> -
-                    <c:forEach var="translation" items="${position.translations}">
-                        ${translation.word}
-                    </c:forEach>
-                    (${position.vocabulary.name})
-                    <br>
+            <c:if test="${translations.size() != 0}">
+                <strong>${source}</strong> -
+                <c:forEach var="translation" items="${translations}">
+                    ${translation.word}
                 </c:forEach>
+                <br>
             </c:if>
-            <c:if test="${positions.size() == 0}">
-                Слово отсутствует
+            <c:if test="${translations.size() == 0}">
+                Слово или перевод отсутствует
             </c:if>
         </div>
     </div>

@@ -28,3 +28,7 @@ a {
     color: lightslategray;
     text-decoration: none;
 }
+
+h2 {
+    display: inline;
+}
