@@ -12,6 +12,8 @@ public interface PositionService {
 
     Position getPositionById(int positionId);
 
+    Position getPositionBySourceAndLanguage(String source, Language sourceLanguage);
+
     List<Translation> getTranslations(String source, Language sourceLanguage, Language translationLanguage);
 
     void addTranslation(int positionId, String[] translations, Language translationLanguage);

@@ -39,6 +39,11 @@ public class PositionServiceImpl implements PositionService{
     }
 
     @Override
+    public Position getPositionBySourceAndLanguage(String source, Language sourceLanguage) {
+        return positionDAO.getPositionBySourceAndLanguage(source, sourceLanguage);
+    }
+
+    @Override
     public List<Translation> getTranslations(String source, Language sourceLanguage, Language translationLanguage) {
         List<Translation> translationsMatchedToLanguage = new ArrayList<>();
         Position position = positionDAO.getPositionBySourceAndLanguage(source, sourceLanguage);

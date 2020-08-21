@@ -1,6 +1,7 @@
 package controller;
 
 import domain.Language;
+import domain.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -56,8 +57,16 @@ public class VocabularyController {
                                           @RequestParam(value = "translationLanguageId") int translationLanguageId) {
         Language sourceLanguage = languageService.getById(sourceLanguageId);
         Language translationLanguage = languageService.getById(translationLanguageId);
+        Position position = positionService.getPositionBySourceAndLanguage(source, sourceLanguage);
+        if (position != null) return "redirect:/positionExists/" + position.getId();
         positionService.addPosition(source, translations, sourceLanguage, translationLanguage);
         return "redirect:/admin";
+    }
+
+    @RequestMapping(value = "/positionExists/{positionId}", method = RequestMethod.GET)
+    public String showPositionExistsPage(@PathVariable int positionId, Model model) {
+        model.addAttribute("positionId", positionId);
+        return "positionExists";
     }
 
     @RequestMapping(value = "/editPosition/{positionId}", method = RequestMethod.GET)
