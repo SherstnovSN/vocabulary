@@ -53,8 +53,6 @@ public class PositionDAOImpl implements PositionDAO {
     @Override
     public void deletePosition(Position position) {
         Session session = sessionFactory.getCurrentSession();
-//        Query<?> positionQuery = session.createQuery("DELETE FROM Position P WHERE P.id = :positionId");
-//        positionQuery.setParameter("positionId", position.getId());
         session.delete(position);
     }
 
