@@ -44,6 +44,9 @@
                     <br><br>
                     <input type="submit" value="Добавить">
                 </form>
+                <c:if test="${invalidWordMessage != null}">
+                    <div id="warning"><br>${invalidWordMessage}</div>
+                </c:if>
                 <script>
                     let x = 0;
                     function addInput() {

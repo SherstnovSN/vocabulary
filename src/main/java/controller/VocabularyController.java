@@ -2,6 +2,7 @@ package controller;
 
 import domain.Language;
 import domain.Position;
+import ecxeption.InvalidWordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -54,12 +55,20 @@ public class VocabularyController {
     public String addPositionToVocabulary(@RequestParam(value = "source") String source,
                                           @RequestParam(value = "translations") String[] translations,
                                           @RequestParam(value = "sourceLanguageId") int sourceLanguageId,
-                                          @RequestParam(value = "translationLanguageId") int translationLanguageId) {
+                                          @RequestParam(value = "translationLanguageId") int translationLanguageId,
+                                          Model model) {
         Language sourceLanguage = languageService.getById(sourceLanguageId);
         Language translationLanguage = languageService.getById(translationLanguageId);
         Position position = positionService.getPositionBySourceAndLanguage(source, sourceLanguage);
         if (position != null) return "redirect:/positionExists/" + position.getId();
-        positionService.addPosition(source, translations, sourceLanguage, translationLanguage);
+        try {
+            positionService.addPosition(source, translations, sourceLanguage, translationLanguage);
+        } catch (InvalidWordException iwe) {
+            List<Language> languages = languageService.getAll();
+            model.addAttribute("languages", languages);
+            model.addAttribute("invalidWordMessage", iwe.getMessage());
+            return "/addPosition";
+        }
         return "redirect:/admin";
     }
 
@@ -85,9 +94,17 @@ public class VocabularyController {
     @RequestMapping(value = "/addTranslation", method = RequestMethod.POST)
     public String addTranslation(@RequestParam(value = "positionId") int positionId,
                                  @RequestParam(value = "translations") String[] translations,
-                                 @RequestParam(value = "translationLanguageId") int translationLanguageId) {
+                                 @RequestParam(value = "translationLanguageId") int translationLanguageId,
+                                 Model model) {
         Language translationLanguage = languageService.getById(translationLanguageId);
-        positionService.addTranslation(positionId, translations, translationLanguage);
+        try {
+            positionService.addTranslation(positionId, translations, translationLanguage);
+        } catch (InvalidWordException iwe) {
+            model.addAttribute("position", positionService.getPositionById(positionId));
+            model.addAttribute("languages", languageService.getAll());
+            model.addAttribute("invalidWordMessage", iwe.getMessage());
+            return "addTranslation";
+        }
         return "redirect:/editPosition/" + positionId;
     }
 

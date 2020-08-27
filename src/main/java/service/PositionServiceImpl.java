@@ -4,6 +4,7 @@ import dao.PositionDAO;
 import domain.Language;
 import domain.Position;
 import domain.Translation;
+import ecxeption.InvalidWordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import validator.Validator;
@@ -14,14 +15,14 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PositionServiceImpl implements PositionService{
+public class PositionServiceImpl implements PositionService {
 
     private Validator validator;
 
     private PositionDAO positionDAO;
 
     @Override
-    public void addPosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) {
+    public void addPosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) throws InvalidWordException {
         if (validator.validate(source, sourceLanguage.getRegex())) {
             Position position = positionDAO.getPositionBySourceAndLanguage(source, sourceLanguage);
             if (position == null) {
@@ -30,7 +31,7 @@ public class PositionServiceImpl implements PositionService{
                 List<Position> reversedPositionsList = reversePosition(source, translations, sourceLanguage, translationLanguage);
                 addPositionsAfterReverse(reversedPositionsList);
             }
-        }
+        } else throw new InvalidWordException("Введенное слово не соответствует выбранному языку");
     }
 
     @Override
@@ -58,7 +59,7 @@ public class PositionServiceImpl implements PositionService{
     }
 
     @Override
-    public void addTranslation(int positionId, String[] translations, Language translationLanguage) {
+    public void addTranslation(int positionId, String[] translations, Language translationLanguage) throws  InvalidWordException {
         Position position = getPositionById(positionId);
         addToTranslationsList(position, translations, translationLanguage);
         List<Position> reversedPositionsList = reversePosition(position.getSource(), translations, position.getLanguage(), translationLanguage);
@@ -82,25 +83,25 @@ public class PositionServiceImpl implements PositionService{
         position.getTranslations().remove(translation);
     }
 
-    public List<Translation> createTranslationsList(Position position, String[] translations, Language translationLanguage) {
+    public List<Translation> createTranslationsList(Position position, String[] translations, Language translationLanguage) throws InvalidWordException {
         List<Translation> translationsList = new ArrayList<>();
         for (String translationWord : translations) {
             if (validator.validate(translationWord, translationLanguage.getRegex())) {
                 Translation translation = positionDAO.getTranslationByWordAndLanguage(translationWord, translationLanguage);
                 if (translation == null) translation = createAndFillTranslation(position, translationWord, translationLanguage);
                 translationsList.add(translation);
-            }
+            } else throw new InvalidWordException("Введенный перевод не соответствует выбранному языку");
         }
         return translationsList;
     }
 
-    public void addToTranslationsList(Position position, String[] translations, Language translationLanguage) {
+    public void addToTranslationsList(Position position, String[] translations, Language translationLanguage) throws InvalidWordException {
         for (String translationWord : translations) {
             if (validator.validate(translationWord, translationLanguage.getRegex())) {
                 Translation translation = positionDAO.getTranslationByWordAndLanguage(translationWord, translationLanguage);
                 if (translation == null) translation = createAndFillTranslation(position, translationWord, translationLanguage);
                 position.getTranslations().add(translation);
-            }
+            } else throw new InvalidWordException("Введенный перевод не соответствует выбранному языку");
         }
     }
 
@@ -114,7 +115,7 @@ public class PositionServiceImpl implements PositionService{
         return translation;
     }
 
-    public Position createAndFillPosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) {
+    public Position createAndFillPosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) throws InvalidWordException {
         Position position = new Position();
         position.setSource(source);
         position.setLanguage(sourceLanguage);
@@ -122,18 +123,20 @@ public class PositionServiceImpl implements PositionService{
         return position;
     }
 
-    public List<Position> reversePosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) {
+    public List<Position> reversePosition(String source, String[] translations, Language sourceLanguage, Language translationLanguage) throws InvalidWordException {
         List<Position> positionsList = new ArrayList<>();
         String[] sources = new String[]{source};
         for (String translationWord : translations) {
-            Position position = positionDAO.getPositionBySourceAndLanguage(translationWord, translationLanguage);
-            if (position == null) positionsList = fillReversedPositionsList(translationWord, sources, translationLanguage, sourceLanguage, positionsList);
-            else addToTranslationsList(position, sources, sourceLanguage);
+            if (validator.validate(translationWord, translationLanguage.getRegex())) {
+                Position position = positionDAO.getPositionBySourceAndLanguage(translationWord, translationLanguage);
+                if (position == null) positionsList = fillReversedPositionsList(translationWord, sources, translationLanguage, sourceLanguage, positionsList);
+                else addToTranslationsList(position, sources, sourceLanguage);
+            }
         }
         return positionsList;
     }
 
-    public List<Position> fillReversedPositionsList(String source, String[] translations, Language sourceLanguage, Language translationLanguage, List<Position> positionsList) {
+    public List<Position> fillReversedPositionsList(String source, String[] translations, Language sourceLanguage, Language translationLanguage, List<Position> positionsList) throws InvalidWordException {
         Position position = createAndFillPosition(source, translations, sourceLanguage, translationLanguage);
         positionsList.add(position);
         return positionsList;
